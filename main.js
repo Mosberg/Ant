@@ -2829,26 +2829,6 @@ class GameScene extends Phaser.Scene {
     }
 }
 
-const config = {
-    type: Phaser.AUTO,
-    width: GAME_WIDTH,
-    height: GAME_HEIGHT,
-    parent: "game-root",
-    backgroundColor: "#15110d",
-    scene: [
-        BootScene,
-        PreloadScene,
-        MainMenuScene,
-        GameScene,
-        UIScene,
-        PauseScene
-    ],
-    scale: {
-        mode: Phaser.Scale.FIT,
-        autoCenter: Phaser.Scale.CENTER_BOTH
-    }
-};
-
 // Mobile integration - add this to the end of your main.js, before the config
 class BootScene extends Phaser.Scene {
     constructor() {
