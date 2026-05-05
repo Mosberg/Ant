@@ -21,12 +21,12 @@
    - This is intentionally modular and heavily commented for extension.
 */
 
-const GAME_WIDTH = 1440;
-const GAME_HEIGHT = 900;
+const GAME_WIDTH = 1920;
+const GAME_HEIGHT = 1080;
 
 const TILE_SIZE = 24;
-const MAP_WIDTH = 52;
-const MAP_HEIGHT = 34;
+const MAP_WIDTH = 80;
+const MAP_HEIGHT = 45;
 const SURFACE_ROWS = 8;
 const UNDERGROUND_START = SURFACE_ROWS;
 
@@ -190,4 +190,3 @@ function clamp(v, min, max) {
 function distance(a, b) {
   return Phaser.Math.Distance.Between(a.x, a.y, b.x, b.y);
 }
-

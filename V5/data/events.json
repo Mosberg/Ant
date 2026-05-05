@@ -1,0 +1,764 @@
+{
+  "baseCooldownSeconds": 24,
+  "events": [
+    {
+      "id": "cave_in_minor",
+      "name": "Minor Cave-in",
+      "weight": 2,
+      "requiresChoice": true,
+      "choiceTimeoutSeconds": 10,
+      "trigger": { "minDay": 1 },
+      "effects": { "moraleDelta": -2 },
+      "choices": [
+        {
+          "id": "clear_rubble",
+          "label": "Send workers to clear rubble",
+          "outcome": {
+            "moraleDelta": -1,
+            "resourceDelta": { "stone": 6 },
+            "digOrders": [
+              { "x": 42, "y": 20 },
+              { "x": 43, "y": 20 }
+            ]
+          }
+        },
+        {
+          "id": "reroute",
+          "label": "Reroute traffic",
+          "outcome": { "moraleDelta": -3 }
+        }
+      ],
+      "outcomes": ["Extra stone if cleared", "Morale penalty if ignored"]
+    },
+    {
+      "id": "cave_in_major",
+      "name": "Major Cave-in",
+      "weight": 1,
+      "requiresChoice": true,
+      "trigger": { "minDay": 4 },
+      "effects": { "moraleDelta": -5 },
+      "choices": [
+        {
+          "id": "full_response",
+          "label": "Full emergency response",
+          "outcome": {
+            "moraleDelta": -2,
+            "resourceDelta": { "stone": 14, "biomass": -4 },
+            "spawnEnemies": ["mite_swarm"]
+          }
+        },
+        {
+          "id": "seal_off",
+          "label": "Seal off the collapsed wing",
+          "outcome": {
+            "moraleDelta": -6,
+            "resourceDelta": { "stone": -8 }
+          }
+        }
+      ],
+      "outcomes": ["Safer tunnel with cost", "Harsh morale drop"]
+    },
+    {
+      "id": "flooding_tunnels",
+      "name": "Flooding in Lower Tunnels",
+      "weight": 2,
+      "requiresChoice": false,
+      "trigger": { "weather": "rain", "minDay": 2 },
+      "effects": {
+        "moraleDelta": -3,
+        "resourceDelta": { "water": 12, "fungus": -8 }
+      },
+      "choices": [
+        {
+          "id": "default",
+          "label": "Drain naturally",
+          "outcome": {
+            "moraleDelta": -3,
+            "resourceDelta": { "water": 12, "fungus": -8 }
+          }
+        }
+      ],
+      "outcomes": ["More water", "Temporary morale strain"]
+    },
+    {
+      "id": "disease_outbreak",
+      "name": "Disease Outbreak",
+      "weight": 1,
+      "requiresChoice": true,
+      "trigger": { "minDay": 5, "minAnts": 15 },
+      "effects": { "moraleDelta": -7 },
+      "choices": [
+        {
+          "id": "quarantine",
+          "label": "Quarantine affected chambers",
+          "outcome": {
+            "moraleDelta": -4,
+            "resourceDelta": { "food": -8, "water": -6 }
+          }
+        },
+        {
+          "id": "push_through",
+          "label": "Keep production active",
+          "outcome": {
+            "moraleDelta": -9,
+            "spawnEnemy": "mite_swarm"
+          }
+        }
+      ],
+      "outcomes": ["Controlled losses", "Higher chaos risk"]
+    },
+    {
+      "id": "queen_illness",
+      "name": "Queen Illness",
+      "weight": 1,
+      "requiresChoice": true,
+      "trigger": { "minDay": 6 },
+      "effects": { "moraleDelta": -8 },
+      "choices": [
+        {
+          "id": "royal_treatment",
+          "label": "Use royal jelly treatment",
+          "outcome": {
+            "moraleDelta": 1,
+            "resourceDelta": { "royal_jelly": -8 }
+          }
+        },
+        {
+          "id": "wait_recovery",
+          "label": "Let her recover naturally",
+          "outcome": {
+            "moraleDelta": -8,
+            "resourceDelta": { "larvae": -6 }
+          }
+        }
+      ],
+      "outcomes": ["Spend jelly for safety", "Risk hatch slowdown"]
+    },
+    {
+      "id": "rival_colony_invasion",
+      "name": "Rival Colony Invasion",
+      "weight": 1,
+      "requiresChoice": false,
+      "trigger": { "minDay": 7 },
+      "effects": {
+        "moraleDelta": -6,
+        "spawnEnemies": ["rival_ant_colony", "rival_ant_colony", "centipede"]
+      },
+      "choices": [
+        {
+          "id": "defend",
+          "label": "Defend the nest",
+          "outcome": {
+            "moraleDelta": -6,
+            "spawnEnemies": ["rival_ant_colony", "rival_ant_colony"]
+          }
+        }
+      ],
+      "outcomes": ["Combat pressure spike"]
+    },
+    {
+      "id": "predator_attack",
+      "name": "Predator Attack",
+      "weight": 2,
+      "requiresChoice": false,
+      "trigger": { "minDay": 2 },
+      "effects": { "moraleDelta": -4, "spawnEnemy": "spider" },
+      "choices": [
+        {
+          "id": "default",
+          "label": "Repel predator",
+          "outcome": { "moraleDelta": -4, "spawnEnemy": "spider" }
+        }
+      ],
+      "outcomes": ["Single threat enters surface"]
+    },
+    {
+      "id": "resource_boon",
+      "name": "Resource Boon",
+      "weight": 2,
+      "requiresChoice": false,
+      "trigger": { "minDay": 1 },
+      "effects": {
+        "moraleDelta": 3,
+        "resourceDelta": { "food": 18, "water": 12, "resin": 8 }
+      },
+      "choices": [
+        {
+          "id": "collect",
+          "label": "Collect everything",
+          "outcome": {
+            "moraleDelta": 3,
+            "resourceDelta": { "food": 18, "water": 12, "resin": 8 }
+          }
+        }
+      ],
+      "outcomes": ["Strong economy boost"]
+    },
+    {
+      "id": "lost_scout_returns",
+      "name": "Lost Scout Returns",
+      "weight": 1,
+      "requiresChoice": false,
+      "trigger": { "minDay": 3 },
+      "effects": { "moraleDelta": 4, "resourceDelta": { "pheromones": 14 } },
+      "choices": [
+        {
+          "id": "debrief",
+          "label": "Debrief scout",
+          "outcome": { "moraleDelta": 4, "techPoints": 16 }
+        }
+      ],
+      "outcomes": ["Morale up and research insights"]
+    },
+    {
+      "id": "strange_glowing_crystal",
+      "name": "Strange Glowing Crystal",
+      "weight": 1,
+      "requiresChoice": true,
+      "trigger": { "minDay": 4 },
+      "effects": { "resourceDelta": { "crystal": 8 } },
+      "choices": [
+        {
+          "id": "extract",
+          "label": "Extract crystal",
+          "outcome": { "resourceDelta": { "crystal": 10, "stone": -4 } }
+        },
+        {
+          "id": "study",
+          "label": "Study in lab",
+          "outcome": { "techPoints": 24, "moraleDelta": 1 }
+        }
+      ],
+      "outcomes": ["Raw resource gain", "Research acceleration"]
+    },
+    {
+      "id": "underground_fungus_bloom",
+      "name": "Underground Fungus Bloom",
+      "weight": 2,
+      "requiresChoice": false,
+      "trigger": { "minDay": 2 },
+      "effects": { "resourceDelta": { "fungus": 24, "food": 10 }, "moraleDelta": 2 },
+      "choices": [
+        {
+          "id": "harvest",
+          "label": "Harvest bloom",
+          "outcome": { "resourceDelta": { "fungus": 24, "food": 10 }, "moraleDelta": 2 }
+        }
+      ],
+      "outcomes": ["Food and fungus spike"]
+    },
+    {
+      "id": "meteor_surface",
+      "name": "Meteor Impact On Surface",
+      "weight": 1,
+      "requiresChoice": true,
+      "trigger": { "minDay": 8 },
+      "effects": { "moraleDelta": -2 },
+      "choices": [
+        {
+          "id": "investigate",
+          "label": "Investigate crater",
+          "outcome": { "resourceDelta": { "crystal": 12, "stone": 18 }, "spawnEnemy": "lizard" }
+        },
+        {
+          "id": "avoid",
+          "label": "Avoid the crater",
+          "outcome": { "moraleDelta": -1 }
+        }
+      ],
+      "outcomes": ["High reward with danger", "Low-risk ignore"]
+    },
+    {
+      "id": "human_activity_nearby",
+      "name": "Human Activity Nearby",
+      "weight": 1,
+      "requiresChoice": false,
+      "trigger": { "minDay": 6 },
+      "effects": { "moraleDelta": -5, "spawnEnemy": "human_foot" },
+      "choices": [
+        {
+          "id": "brace",
+          "label": "Brace for tremors",
+          "outcome": { "moraleDelta": -5, "spawnEnemy": "human_foot" }
+        }
+      ],
+      "outcomes": ["Stomp threat incoming"]
+    },
+    {
+      "id": "larvae_surge",
+      "name": "Larvae Surge",
+      "weight": 2,
+      "requiresChoice": false,
+      "trigger": { "minDay": 2 },
+      "effects": { "resourceDelta": { "larvae": 14 }, "moraleDelta": 1 },
+      "choices": [
+        {
+          "id": "nurture",
+          "label": "Nurture all brood",
+          "outcome": { "resourceDelta": { "larvae": 14, "food": -6 }, "moraleDelta": 1 }
+        }
+      ],
+      "outcomes": ["Population potential increase"]
+    },
+    {
+      "id": "resin_vein",
+      "name": "Resin Vein Found",
+      "weight": 2,
+      "requiresChoice": false,
+      "trigger": { "minDay": 3 },
+      "effects": { "resourceDelta": { "resin": 20, "stone": 8 } },
+      "choices": [
+        {
+          "id": "mine",
+          "label": "Mine the vein",
+          "outcome": { "resourceDelta": { "resin": 20, "stone": 8 } }
+        }
+      ],
+      "outcomes": ["Construction materials bonus"]
+    },
+    {
+      "id": "toxic_mold",
+      "name": "Toxic Mold",
+      "weight": 1,
+      "requiresChoice": true,
+      "trigger": { "minDay": 5 },
+      "effects": { "moraleDelta": -4 },
+      "choices": [
+        {
+          "id": "burn_out",
+          "label": "Burn out infected area",
+          "outcome": { "resourceDelta": { "fungus": -18, "water": -8 }, "moraleDelta": -2 }
+        },
+        {
+          "id": "contain",
+          "label": "Contain mold slowly",
+          "outcome": { "moraleDelta": -5, "spawnEnemy": "mite_swarm" }
+        }
+      ],
+      "outcomes": ["Economic hit", "Risk spread"]
+    },
+    {
+      "id": "heatwave_strain",
+      "name": "Heatwave Strain",
+      "weight": 1,
+      "requiresChoice": false,
+      "trigger": { "weather": "heatwave", "minDay": 3 },
+      "effects": { "moraleDelta": -3, "resourceDelta": { "water": -12 } },
+      "choices": [
+        {
+          "id": "ration",
+          "label": "Ration water",
+          "outcome": { "moraleDelta": -3, "resourceDelta": { "water": -12 } }
+        }
+      ],
+      "outcomes": ["Water pressure"]
+    },
+    {
+      "id": "cold_snap_burrow",
+      "name": "Cold Snap Burrow",
+      "weight": 1,
+      "requiresChoice": false,
+      "trigger": { "weather": "cold_snap", "minDay": 3 },
+      "effects": { "moraleDelta": -2, "resourceDelta": { "food": -6 } },
+      "choices": [
+        {
+          "id": "insulate",
+          "label": "Insulate brood chambers",
+          "outcome": { "moraleDelta": -2, "resourceDelta": { "food": -6, "resin": -4 } }
+        }
+      ],
+      "outcomes": ["Moderate slowdown"]
+    },
+    {
+      "id": "stormfront_assault",
+      "name": "Stormfront Assault",
+      "weight": 1,
+      "requiresChoice": false,
+      "trigger": { "weather": "storm", "minDay": 4 },
+      "effects": { "moraleDelta": -5, "spawnEnemies": ["spider", "beetle"] },
+      "choices": [
+        {
+          "id": "hunker",
+          "label": "Hunker down",
+          "outcome": { "moraleDelta": -5, "spawnEnemies": ["spider", "beetle"] }
+        }
+      ],
+      "outcomes": ["Dual threat while visibility drops"]
+    },
+    {
+      "id": "fog_confusion",
+      "name": "Fog Confusion",
+      "weight": 1,
+      "requiresChoice": true,
+      "trigger": { "weather": "fog", "minDay": 2 },
+      "effects": { "moraleDelta": -2 },
+      "choices": [
+        {
+          "id": "signal_boost",
+          "label": "Boost pheromone signals",
+          "outcome": { "resourceDelta": { "pheromones": -10 }, "moraleDelta": 1 }
+        },
+        {
+          "id": "slow_operations",
+          "label": "Slow operations",
+          "outcome": { "moraleDelta": -3 }
+        }
+      ],
+      "outcomes": ["Spend pheromones for stability", "Lower coordination"]
+    },
+    {
+      "id": "parasite_fly_nest",
+      "name": "Parasite Fly Nest",
+      "weight": 1,
+      "requiresChoice": false,
+      "trigger": { "minDay": 6 },
+      "effects": { "spawnEnemies": ["parasite_fly", "parasite_fly"], "moraleDelta": -4 },
+      "choices": [
+        {
+          "id": "purge_nest",
+          "label": "Purge nest",
+          "outcome": { "spawnEnemies": ["parasite_fly", "parasite_fly"], "moraleDelta": -4 }
+        }
+      ],
+      "outcomes": ["Air threat increases"]
+    },
+    {
+      "id": "mite_swarm_breakout",
+      "name": "Mite Swarm Breakout",
+      "weight": 1,
+      "requiresChoice": false,
+      "trigger": { "minDay": 4 },
+      "effects": { "spawnEnemies": ["mite_swarm", "mite_swarm", "mite_swarm"], "moraleDelta": -3 },
+      "choices": [
+        {
+          "id": "contain_mites",
+          "label": "Contain swarm",
+          "outcome": {
+            "spawnEnemies": ["mite_swarm", "mite_swarm", "mite_swarm"],
+            "moraleDelta": -3
+          }
+        }
+      ],
+      "outcomes": ["Rapid small-enemy wave"]
+    },
+    {
+      "id": "royal_jelly_cache",
+      "name": "Royal Jelly Cache",
+      "weight": 1,
+      "requiresChoice": false,
+      "trigger": { "minDay": 5 },
+      "effects": { "resourceDelta": { "royal_jelly": 12 }, "moraleDelta": 3 },
+      "choices": [
+        {
+          "id": "store_cache",
+          "label": "Store cache",
+          "outcome": { "resourceDelta": { "royal_jelly": 12 }, "moraleDelta": 3 }
+        }
+      ],
+      "outcomes": ["Royal economy boost"]
+    },
+    {
+      "id": "abandoned_chamber",
+      "name": "Abandoned Chamber",
+      "weight": 1,
+      "requiresChoice": true,
+      "trigger": { "minDay": 3 },
+      "effects": { "resourceDelta": { "stone": 12, "resin": 8 } },
+      "choices": [
+        {
+          "id": "loot_chamber",
+          "label": "Loot chamber",
+          "outcome": { "resourceDelta": { "stone": 12, "resin": 8, "food": 10 } }
+        },
+        {
+          "id": "repurpose_chamber",
+          "label": "Repurpose for research",
+          "outcome": { "techPoints": 20, "moraleDelta": 1 }
+        }
+      ],
+      "outcomes": ["Material gain", "Research gain"]
+    },
+    {
+      "id": "ventilation_failure",
+      "name": "Ventilation Failure",
+      "weight": 1,
+      "requiresChoice": true,
+      "trigger": { "minDay": 6 },
+      "effects": { "moraleDelta": -4 },
+      "choices": [
+        {
+          "id": "repair_vents",
+          "label": "Repair vents quickly",
+          "outcome": { "resourceDelta": { "stone": -10, "resin": -8 }, "moraleDelta": -1 }
+        },
+        {
+          "id": "temporary_patch",
+          "label": "Temporary patch",
+          "outcome": { "moraleDelta": -5 }
+        }
+      ],
+      "outcomes": ["Costly repair", "Persistent morale damage"]
+    },
+    {
+      "id": "tunnel_echo",
+      "name": "Tunnel Echoes",
+      "weight": 1,
+      "requiresChoice": false,
+      "trigger": { "minDay": 2 },
+      "effects": { "moraleDelta": 1, "techPoints": 8 },
+      "choices": [
+        {
+          "id": "study_echoes",
+          "label": "Study resonance",
+          "outcome": { "moraleDelta": 1, "techPoints": 8 }
+        }
+      ],
+      "outcomes": ["Minor morale and research boost"]
+    },
+    {
+      "id": "underground_spring",
+      "name": "Underground Spring",
+      "weight": 1,
+      "requiresChoice": false,
+      "trigger": { "minDay": 4 },
+      "effects": { "resourceDelta": { "water": 24 }, "moraleDelta": 2 },
+      "choices": [
+        {
+          "id": "tap_spring",
+          "label": "Tap spring",
+          "outcome": { "resourceDelta": { "water": 24 }, "moraleDelta": 2 }
+        }
+      ],
+      "outcomes": ["Water windfall"]
+    },
+    {
+      "id": "surface_drought",
+      "name": "Surface Drought",
+      "weight": 1,
+      "requiresChoice": false,
+      "trigger": { "minDay": 5 },
+      "effects": { "resourceDelta": { "water": -18, "food": -8 }, "moraleDelta": -3 },
+      "choices": [
+        {
+          "id": "ration_drought",
+          "label": "Ration hard",
+          "outcome": { "resourceDelta": { "water": -18, "food": -8 }, "moraleDelta": -3 }
+        }
+      ],
+      "outcomes": ["Resource scarcity"]
+    },
+    {
+      "id": "brood_mutation",
+      "name": "Brood Mutation",
+      "weight": 1,
+      "requiresChoice": true,
+      "trigger": { "minDay": 8 },
+      "effects": { "resourceDelta": { "larvae": 8 } },
+      "choices": [
+        {
+          "id": "study_mutation",
+          "label": "Study mutation",
+          "outcome": { "techPoints": 26, "moraleDelta": 1 }
+        },
+        {
+          "id": "cull_mutation",
+          "label": "Cull unstable brood",
+          "outcome": { "resourceDelta": { "larvae": -8 }, "moraleDelta": -2 }
+        }
+      ],
+      "outcomes": ["Research opportunity", "Safety-first pruning"]
+    },
+    {
+      "id": "wasp_raiders",
+      "name": "Wasp Raiders",
+      "weight": 1,
+      "requiresChoice": false,
+      "trigger": { "minDay": 7 },
+      "effects": { "spawnEnemies": ["wasp", "wasp"], "moraleDelta": -4 },
+      "choices": [
+        {
+          "id": "anti_air",
+          "label": "Deploy anti-air patrols",
+          "outcome": { "spawnEnemies": ["wasp", "wasp"], "moraleDelta": -4 }
+        }
+      ],
+      "outcomes": ["Air raid pressure"]
+    },
+    {
+      "id": "centipede_breach",
+      "name": "Centipede Breach",
+      "weight": 1,
+      "requiresChoice": false,
+      "trigger": { "minDay": 8 },
+      "effects": { "spawnEnemy": "centipede", "moraleDelta": -5 },
+      "choices": [
+        {
+          "id": "stop_breach",
+          "label": "Stop breach",
+          "outcome": { "spawnEnemy": "centipede", "moraleDelta": -5 }
+        }
+      ],
+      "outcomes": ["High-threat attacker"]
+    },
+    {
+      "id": "beetle_stampede",
+      "name": "Beetle Stampede",
+      "weight": 1,
+      "requiresChoice": false,
+      "trigger": { "minDay": 6 },
+      "effects": { "spawnEnemies": ["beetle", "beetle"], "moraleDelta": -4 },
+      "choices": [
+        {
+          "id": "brace_walls",
+          "label": "Brace walls",
+          "outcome": { "spawnEnemies": ["beetle", "beetle"], "moraleDelta": -4 }
+        }
+      ],
+      "outcomes": ["Room damage risk"]
+    },
+    {
+      "id": "frog_ambush",
+      "name": "Frog Ambush",
+      "weight": 1,
+      "requiresChoice": false,
+      "trigger": { "minDay": 9 },
+      "effects": { "spawnEnemy": "frog", "moraleDelta": -4 },
+      "choices": [
+        {
+          "id": "counter_hunt",
+          "label": "Counter-hunt",
+          "outcome": { "spawnEnemy": "frog", "moraleDelta": -4 }
+        }
+      ],
+      "outcomes": ["Heavy predator appears"]
+    },
+    {
+      "id": "lizard_hunt",
+      "name": "Lizard Hunt",
+      "weight": 1,
+      "requiresChoice": false,
+      "trigger": { "minDay": 10 },
+      "effects": { "spawnEnemy": "lizard", "moraleDelta": -6 },
+      "choices": [
+        {
+          "id": "defense_line",
+          "label": "Hold defense line",
+          "outcome": { "spawnEnemy": "lizard", "moraleDelta": -6 }
+        }
+      ],
+      "outcomes": ["Boss-like predator"]
+    },
+    {
+      "id": "human_foot_stomp",
+      "name": "Human Foot Stomp Event",
+      "weight": 1,
+      "requiresChoice": false,
+      "trigger": { "minDay": 10 },
+      "effects": { "spawnEnemy": "human_foot", "moraleDelta": -8 },
+      "choices": [
+        {
+          "id": "evacuate_surface",
+          "label": "Evacuate surface squads",
+          "outcome": { "spawnEnemy": "human_foot", "moraleDelta": -8 }
+        }
+      ],
+      "outcomes": ["Extreme stomp threat"]
+    },
+    {
+      "id": "crystal_shard_rain",
+      "name": "Crystal Shard Rain",
+      "weight": 1,
+      "requiresChoice": false,
+      "trigger": { "minDay": 9 },
+      "effects": { "resourceDelta": { "crystal": 14, "stone": 10 }, "moraleDelta": 2 },
+      "choices": [
+        {
+          "id": "collect_shards",
+          "label": "Collect shards",
+          "outcome": { "resourceDelta": { "crystal": 14, "stone": 10 }, "moraleDelta": 2 }
+        }
+      ],
+      "outcomes": ["Rare resource spike"]
+    },
+    {
+      "id": "ancient_cache",
+      "name": "Ancient Cache",
+      "weight": 1,
+      "requiresChoice": true,
+      "trigger": { "minDay": 6 },
+      "effects": { "resourceDelta": { "food": 16, "resin": 14 } },
+      "choices": [
+        {
+          "id": "claim_cache",
+          "label": "Claim resources",
+          "outcome": { "resourceDelta": { "food": 16, "resin": 14, "stone": 10 } }
+        },
+        {
+          "id": "study_artifacts",
+          "label": "Study artifacts",
+          "outcome": { "techPoints": 30, "moraleDelta": 2 }
+        }
+      ],
+      "outcomes": ["Material haul", "Research breakthrough"]
+    },
+    {
+      "id": "pheromone_feedback",
+      "name": "Pheromone Feedback Loop",
+      "weight": 1,
+      "requiresChoice": true,
+      "trigger": { "minDay": 5 },
+      "effects": { "moraleDelta": -2 },
+      "choices": [
+        {
+          "id": "purge_trails",
+          "label": "Purge old trails",
+          "outcome": { "resourceDelta": { "pheromones": -14 }, "moraleDelta": 1 }
+        },
+        {
+          "id": "ride_it_out",
+          "label": "Ride it out",
+          "outcome": { "moraleDelta": -4 }
+        }
+      ],
+      "outcomes": ["Resource cost to stabilize", "Ongoing confusion"]
+    },
+    {
+      "id": "defensive_uprising",
+      "name": "Defensive Uprising",
+      "weight": 1,
+      "requiresChoice": false,
+      "trigger": { "minDay": 11, "minEnemies": 1 },
+      "effects": { "moraleDelta": 5, "resourceDelta": { "biomass": 12 } },
+      "choices": [
+        {
+          "id": "rally_colony",
+          "label": "Rally all defenders",
+          "outcome": { "moraleDelta": 5, "resourceDelta": { "biomass": 12 } }
+        }
+      ],
+      "outcomes": ["Morale surge during war"]
+    },
+    {
+      "id": "perfect_foraging_day",
+      "name": "Perfect Foraging Day",
+      "weight": 2,
+      "requiresChoice": false,
+      "trigger": { "minDay": 3, "weather": "clear" },
+      "effects": {
+        "resourceDelta": { "food": 26, "water": 10, "biomass": 8 },
+        "moraleDelta": 4
+      },
+      "choices": [
+        {
+          "id": "exploit_conditions",
+          "label": "Exploit ideal conditions",
+          "outcome": {
+            "resourceDelta": { "food": 26, "water": 10, "biomass": 8 },
+            "moraleDelta": 4
+          }
+        }
+      ],
+      "outcomes": ["Top-tier economy burst"]
+    }
+  ]
+}

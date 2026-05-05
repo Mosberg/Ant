@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="description" content="V5 Ant Colony Manager - Phaser browser simulation" />
+    <title>Ant Colony Manager V5</title>
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+    <link rel="shortcut icon" href="./favicon.svg" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="shell" aria-label="Ant Colony Manager V5 shell">
+      <header class="shell-header">
+        <h1>Ant Colony Manager V5</h1>
+        <p>Modular Phaser colony simulation with config-driven systems.</p>
+      </header>
+      <section class="game-wrap" aria-label="Game canvas">
+        <div id="game-root" class="game-root"></div>
+        <p id="boot-error" class="boot-error" role="alert"></p>
+      </section>
+      <footer class="shell-footer">
+        <p>Tip: run from a local web server so JSON config loading works reliably.</p>
+      </footer>
+    </main>
+    <script type="module" src="./main.js"></script>
+  </body>
+</html>

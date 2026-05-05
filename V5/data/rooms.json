@@ -1,0 +1,399 @@
+{
+  "roomTypes": [
+    {
+      "id": "queen_chamber",
+      "name": "Queen Chamber",
+      "category": "core",
+      "buildCost": { "food": 0 },
+      "upgradeCost": { "food": 60, "stone": 30, "resin": 20 },
+      "buildTime": 0,
+      "upgradeTime": 35,
+      "maxLevel": 4,
+      "upgradeCapacityGain": 6,
+      "capacity": 20,
+      "passiveEffects": {
+        "hatchRateBonus": 0.16,
+        "moraleBonus": 1.8,
+        "storageBonus": { "royal_jelly": 20 }
+      },
+      "activeAbilities": ["queenCommand", "fertilityBurst"],
+      "synergyBonuses": [{ "withType": "royal_guard_hall", "maxDistance": 7, "moraleBonus": 1.4 }]
+    },
+    {
+      "id": "brood_chamber",
+      "name": "Brood Chamber",
+      "category": "core",
+      "buildCost": { "food": 40, "water": 10 },
+      "upgradeCost": { "food": 55, "stone": 20 },
+      "buildTime": 18,
+      "upgradeTime": 24,
+      "maxLevel": 4,
+      "upgradeCapacityGain": 10,
+      "capacity": 34,
+      "passiveEffects": {
+        "hatchRateBonus": 0.22,
+        "productionMultiplier": { "larvae": 1.2 }
+      },
+      "activeAbilities": ["accelerateBrood"],
+      "synergyBonuses": [
+        { "withType": "nursery", "maxDistance": 5, "resource": "larvae", "multiplier": 1.08 }
+      ]
+    },
+    {
+      "id": "nursery",
+      "name": "Nursery",
+      "category": "core",
+      "buildCost": { "food": 30, "water": 18 },
+      "upgradeCost": { "food": 45, "water": 16, "resin": 10 },
+      "buildTime": 14,
+      "upgradeTime": 20,
+      "maxLevel": 4,
+      "upgradeCapacityGain": 8,
+      "capacity": 28,
+      "passiveEffects": {
+        "hatchRateBonus": 0.12,
+        "moraleBonus": 0.8
+      },
+      "activeAbilities": ["warmBrood"],
+      "synergyBonuses": [{ "withType": "infirmary", "maxDistance": 6, "moraleBonus": 0.6 }]
+    },
+    {
+      "id": "food_storage",
+      "name": "Food Storage",
+      "category": "storage",
+      "defaultBuildSelection": true,
+      "buildCost": { "food": 18, "stone": 12 },
+      "upgradeCost": { "food": 28, "stone": 20, "resin": 12 },
+      "buildTime": 12,
+      "upgradeTime": 18,
+      "maxLevel": 5,
+      "upgradeCapacityGain": 24,
+      "capacity": 130,
+      "passiveEffects": {
+        "storageBonus": { "food": 120, "fungus": 40 },
+        "consumptionMultiplier": { "food": 0.98 }
+      },
+      "activeAbilities": ["rationingProtocol"],
+      "synergyBonuses": [
+        { "withType": "fungus_farm", "maxDistance": 6, "resource": "fungus", "multiplier": 1.12 }
+      ]
+    },
+    {
+      "id": "water_storage",
+      "name": "Water Storage",
+      "category": "storage",
+      "buildCost": { "food": 14, "stone": 14 },
+      "upgradeCost": { "food": 20, "stone": 22, "resin": 8 },
+      "buildTime": 11,
+      "upgradeTime": 17,
+      "maxLevel": 4,
+      "upgradeCapacityGain": 18,
+      "capacity": 95,
+      "passiveEffects": {
+        "storageBonus": { "water": 120 },
+        "consumptionMultiplier": { "water": 0.96 }
+      },
+      "activeAbilities": ["waterPurge"],
+      "synergyBonuses": [{ "withType": "ventilation_shaft", "maxDistance": 8, "moraleBonus": 0.4 }]
+    },
+    {
+      "id": "barracks",
+      "name": "Barracks",
+      "category": "military",
+      "buildCost": { "food": 36, "stone": 24, "resin": 10 },
+      "upgradeCost": { "food": 46, "stone": 34, "resin": 16 },
+      "buildTime": 22,
+      "upgradeTime": 26,
+      "maxLevel": 4,
+      "upgradeCapacityGain": 6,
+      "capacity": 16,
+      "passiveEffects": {
+        "defenseBonus": 1.5,
+        "moraleBonus": 0.7
+      },
+      "activeAbilities": ["alertDrill"],
+      "synergyBonuses": [{ "withType": "training_pit", "maxDistance": 6, "moraleBonus": 0.8 }]
+    },
+    {
+      "id": "training_pit",
+      "name": "Training Pit",
+      "category": "military",
+      "buildCost": { "food": 32, "stone": 20 },
+      "upgradeCost": { "food": 42, "stone": 26, "resin": 8 },
+      "buildTime": 20,
+      "upgradeTime": 22,
+      "maxLevel": 4,
+      "upgradeCapacityGain": 4,
+      "capacity": 12,
+      "passiveEffects": {
+        "moraleBonus": 0.6,
+        "productionMultiplier": { "biomass": 1.05 }
+      },
+      "activeAbilities": ["formationPractice"],
+      "synergyBonuses": [{ "withType": "armory", "maxDistance": 6, "moraleBonus": 0.5 }]
+    },
+    {
+      "id": "research_lab",
+      "name": "Research Lab",
+      "category": "science",
+      "buildCost": { "food": 44, "stone": 28, "crystal": 5 },
+      "upgradeCost": { "food": 56, "stone": 36, "crystal": 7 },
+      "buildTime": 26,
+      "upgradeTime": 34,
+      "maxLevel": 4,
+      "upgradeCapacityGain": 3,
+      "capacity": 10,
+      "passiveEffects": {
+        "researchPerSecond": 1.3,
+        "moraleBonus": 0.4
+      },
+      "activeAbilities": ["rapidPrototype"],
+      "synergyBonuses": [
+        {
+          "withType": "crystal_chamber",
+          "maxDistance": 7,
+          "resource": "crystal",
+          "multiplier": 1.08
+        }
+      ]
+    },
+    {
+      "id": "pheromone_lab",
+      "name": "Pheromone Lab",
+      "category": "science",
+      "buildCost": { "food": 30, "water": 16, "resin": 16 },
+      "upgradeCost": { "food": 40, "water": 20, "resin": 24 },
+      "buildTime": 20,
+      "upgradeTime": 26,
+      "maxLevel": 4,
+      "upgradeCapacityGain": 4,
+      "capacity": 12,
+      "passiveEffects": {
+        "productionMultiplier": { "pheromones": 1.22 },
+        "moraleBonus": 0.6
+      },
+      "activeAbilities": ["signalPulse"],
+      "synergyBonuses": [
+        { "withType": "scout_post", "maxDistance": 8, "resource": "pheromones", "multiplier": 1.1 }
+      ]
+    },
+    {
+      "id": "hatchery",
+      "name": "Hatchery",
+      "category": "core",
+      "buildCost": { "food": 35, "water": 22, "biomass": 14 },
+      "upgradeCost": { "food": 48, "water": 26, "biomass": 18 },
+      "buildTime": 24,
+      "upgradeTime": 28,
+      "maxLevel": 4,
+      "upgradeCapacityGain": 12,
+      "capacity": 30,
+      "passiveEffects": {
+        "hatchRateBonus": 0.25,
+        "productionMultiplier": { "larvae": 1.15 }
+      },
+      "activeAbilities": ["burstHatch"],
+      "synergyBonuses": [
+        { "withType": "brood_chamber", "maxDistance": 6, "resource": "larvae", "multiplier": 1.1 }
+      ]
+    },
+    {
+      "id": "infirmary",
+      "name": "Infirmary",
+      "category": "support",
+      "buildCost": { "food": 28, "water": 16, "resin": 12 },
+      "upgradeCost": { "food": 38, "water": 20, "resin": 16 },
+      "buildTime": 18,
+      "upgradeTime": 22,
+      "maxLevel": 4,
+      "upgradeCapacityGain": 5,
+      "capacity": 14,
+      "passiveEffects": {
+        "healingRateBonus": 1.6,
+        "moraleBonus": 0.8
+      },
+      "activeAbilities": ["emergencyTriage"],
+      "synergyBonuses": [{ "withType": "nursery", "maxDistance": 6, "moraleBonus": 0.7 }]
+    },
+    {
+      "id": "armory",
+      "name": "Armory",
+      "category": "military",
+      "buildCost": { "food": 30, "stone": 24, "resin": 14 },
+      "upgradeCost": { "food": 42, "stone": 30, "resin": 20 },
+      "buildTime": 20,
+      "upgradeTime": 24,
+      "maxLevel": 4,
+      "upgradeCapacityGain": 4,
+      "capacity": 10,
+      "passiveEffects": {
+        "defenseBonus": 1.9,
+        "moraleBonus": 0.5
+      },
+      "activeAbilities": ["battleResupply"],
+      "synergyBonuses": [{ "withType": "barracks", "maxDistance": 6, "moraleBonus": 0.6 }]
+    },
+    {
+      "id": "excavation_hub",
+      "name": "Excavation Hub",
+      "category": "industry",
+      "buildCost": { "food": 26, "stone": 30, "resin": 10 },
+      "upgradeCost": { "food": 34, "stone": 36, "resin": 16 },
+      "buildTime": 20,
+      "upgradeTime": 22,
+      "maxLevel": 4,
+      "upgradeCapacityGain": 3,
+      "capacity": 8,
+      "passiveEffects": {
+        "productionMultiplier": { "stone": 1.24, "crystal": 1.12 },
+        "moraleBonus": 0.2
+      },
+      "activeAbilities": ["drillRush"],
+      "synergyBonuses": [{ "withType": "ventilation_shaft", "maxDistance": 8, "moraleBonus": 0.4 }]
+    },
+    {
+      "id": "scout_post",
+      "name": "Scout Post",
+      "category": "support",
+      "buildCost": { "food": 20, "water": 10, "resin": 14 },
+      "upgradeCost": { "food": 28, "water": 14, "resin": 18 },
+      "buildTime": 16,
+      "upgradeTime": 20,
+      "maxLevel": 4,
+      "upgradeCapacityGain": 2,
+      "capacity": 8,
+      "passiveEffects": {
+        "productionMultiplier": { "pheromones": 1.12 },
+        "moraleBonus": 0.5
+      },
+      "activeAbilities": ["scoutSweep"],
+      "synergyBonuses": [
+        {
+          "withType": "pheromone_lab",
+          "maxDistance": 8,
+          "resource": "pheromones",
+          "multiplier": 1.14
+        }
+      ]
+    },
+    {
+      "id": "royal_guard_hall",
+      "name": "Royal Guard Hall",
+      "category": "military",
+      "buildCost": { "food": 48, "stone": 30, "royal_jelly": 8 },
+      "upgradeCost": { "food": 60, "stone": 38, "royal_jelly": 10 },
+      "buildTime": 28,
+      "upgradeTime": 30,
+      "maxLevel": 4,
+      "upgradeCapacityGain": 4,
+      "capacity": 10,
+      "passiveEffects": {
+        "defenseBonus": 2.3,
+        "moraleBonus": 1.3
+      },
+      "activeAbilities": ["royalStand"],
+      "synergyBonuses": [{ "withType": "queen_chamber", "maxDistance": 8, "moraleBonus": 1.5 }]
+    },
+    {
+      "id": "fungus_farm",
+      "name": "Fungus Farm",
+      "category": "industry",
+      "buildCost": { "food": 18, "water": 20, "biomass": 12 },
+      "upgradeCost": { "food": 24, "water": 26, "biomass": 16 },
+      "buildTime": 16,
+      "upgradeTime": 20,
+      "maxLevel": 5,
+      "upgradeCapacityGain": 16,
+      "capacity": 70,
+      "passiveEffects": {
+        "productionMultiplier": { "fungus": 1.35, "food": 1.08 },
+        "storageBonus": { "fungus": 60 }
+      },
+      "activeAbilities": ["sporeBurst"],
+      "synergyBonuses": [
+        { "withType": "food_storage", "maxDistance": 7, "resource": "fungus", "multiplier": 1.15 }
+      ]
+    },
+    {
+      "id": "waste_disposal",
+      "name": "Waste Disposal",
+      "category": "utility",
+      "buildCost": { "stone": 20, "resin": 10 },
+      "upgradeCost": { "stone": 24, "resin": 16, "water": 10 },
+      "buildTime": 14,
+      "upgradeTime": 18,
+      "maxLevel": 4,
+      "upgradeCapacityGain": 6,
+      "capacity": 22,
+      "passiveEffects": {
+        "consumptionMultiplier": { "water": 0.95 },
+        "moraleBonus": 0.6
+      },
+      "activeAbilities": ["purgeMold"],
+      "synergyBonuses": [{ "withType": "infirmary", "maxDistance": 7, "moraleBonus": 0.5 }]
+    },
+    {
+      "id": "ventilation_shaft",
+      "name": "Ventilation Shaft",
+      "category": "utility",
+      "buildCost": { "stone": 16, "resin": 8 },
+      "upgradeCost": { "stone": 24, "resin": 12 },
+      "buildTime": 12,
+      "upgradeTime": 16,
+      "maxLevel": 4,
+      "upgradeCapacityGain": 4,
+      "capacity": 12,
+      "passiveEffects": {
+        "moraleBonus": 0.9,
+        "productionMultiplier": { "water": 1.06 }
+      },
+      "activeAbilities": ["ventPurge"],
+      "synergyBonuses": [{ "withType": "excavation_hub", "maxDistance": 9, "moraleBonus": 0.4 }]
+    },
+    {
+      "id": "storage_vault",
+      "name": "Storage Vault",
+      "category": "storage",
+      "buildCost": { "stone": 34, "resin": 22, "food": 24 },
+      "upgradeCost": { "stone": 42, "resin": 28, "food": 30 },
+      "buildTime": 24,
+      "upgradeTime": 28,
+      "maxLevel": 5,
+      "upgradeCapacityGain": 36,
+      "capacity": 150,
+      "passiveEffects": {
+        "storageBonus": {
+          "food": 110,
+          "water": 90,
+          "stone": 120,
+          "resin": 80,
+          "biomass": 90
+        }
+      },
+      "activeAbilities": ["vaultLockdown"],
+      "synergyBonuses": [{ "withType": "food_storage", "maxDistance": 8, "moraleBonus": 0.5 }]
+    },
+    {
+      "id": "crystal_chamber",
+      "name": "Crystal Chamber",
+      "category": "rare",
+      "buildCost": { "stone": 40, "crystal": 12, "food": 32 },
+      "upgradeCost": { "stone": 50, "crystal": 16, "food": 44 },
+      "buildTime": 30,
+      "upgradeTime": 36,
+      "maxLevel": 4,
+      "upgradeCapacityGain": 10,
+      "capacity": 40,
+      "passiveEffects": {
+        "productionMultiplier": { "crystal": 1.28 },
+        "storageBonus": { "crystal": 60 },
+        "researchPerSecond": 0.9,
+        "moraleBonus": 0.8
+      },
+      "activeAbilities": ["resonanceBurst"],
+      "synergyBonuses": [
+        { "withType": "research_lab", "maxDistance": 7, "resource": "crystal", "multiplier": 1.12 }
+      ]
+    }
+  ]
+}

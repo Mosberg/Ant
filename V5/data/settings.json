@@ -1,0 +1,90 @@
+{
+  "defaults": {
+    "audio": {
+      "masterVolume": 0.75,
+      "musicEnabled": true,
+      "sfxEnabled": true
+    },
+    "gameplay": {
+      "gameSpeed": 1,
+      "difficulty": "Balanced",
+      "autosaveEnabled": true,
+      "autosaveSeconds": 45,
+      "simulationDepth": "full"
+    },
+    "graphics": {
+      "quality": "High",
+      "particleDensity": "Medium",
+      "antSpriteDetail": "Detailed"
+    },
+    "accessibility": {
+      "colorblindMode": "Off"
+    },
+    "ui": {
+      "scale": 1
+    },
+    "controls": {
+      "defaultTool": "select"
+    }
+  },
+  "schema": {
+    "audio": {
+      "masterVolume": { "type": "number", "min": 0, "max": 1, "step": 0.05 },
+      "musicEnabled": { "type": "boolean" },
+      "sfxEnabled": { "type": "boolean" }
+    },
+    "gameplay": {
+      "gameSpeed": { "type": "number", "min": 0.25, "max": 4, "step": 0.25 },
+      "difficulty": {
+        "options": ["Tranquil", "Forgiving", "Balanced", "Harsh", "Nightmare"]
+      },
+      "autosaveEnabled": { "type": "boolean" },
+      "autosaveSeconds": { "type": "number", "min": 15, "max": 180, "step": 5 },
+      "simulationDepth": {
+        "options": ["light", "standard", "full"]
+      }
+    },
+    "graphics": {
+      "quality": { "options": ["Low", "Medium", "High", "Ultra"] },
+      "particleDensity": { "options": ["Low", "Medium", "High"] },
+      "antSpriteDetail": { "options": ["Minimal", "Detailed", "Ultra"] }
+    },
+    "accessibility": {
+      "colorblindMode": {
+        "options": ["Off", "Deuteranopia", "Protanopia", "Tritanopia", "High Contrast"]
+      }
+    },
+    "ui": {
+      "scale": { "type": "number", "min": 0.8, "max": 1.5, "step": 0.05 }
+    },
+    "controls": {
+      "defaultTool": {
+        "options": ["select", "dig", "build", "pheromone"]
+      }
+    }
+  },
+  "difficulty": {
+    "presets": ["Tranquil", "Forgiving", "Balanced", "Harsh", "Nightmare"]
+  },
+  "morale": {
+    "startingMorale": 78
+  },
+  "debug": {
+    "defaults": {
+      "showFps": true,
+      "showEntityCount": true,
+      "showPathfindingGrid": false,
+      "showAiStateViewer": false,
+      "showPheromoneHeatmap": false,
+      "showRoomStats": false,
+      "showResourceFlowGraph": false,
+      "showEventLog": false,
+      "enableManualSpawnTools": true,
+      "freeCamera": false
+    }
+  },
+  "saveLoad": {
+    "version": 5,
+    "slots": ["autosave", "slot1", "slot2", "slot3"]
+  }
+}

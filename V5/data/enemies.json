@@ -1,0 +1,155 @@
+{
+  "enemyTypes": [
+    {
+      "id": "spider",
+      "name": "Spider",
+      "behavior": ["patrol", "hunt", "raid"],
+      "stats": {
+        "health": 46,
+        "speed": 1.95,
+        "attackDamage": 7,
+        "attackRate": 1,
+        "armor": 1,
+        "visionRadius": 6
+      }
+    },
+    {
+      "id": "beetle",
+      "name": "Beetle",
+      "behavior": ["patrol", "destroyRooms", "raid"],
+      "stats": {
+        "health": 68,
+        "speed": 1.45,
+        "attackDamage": 8,
+        "attackRate": 0.75,
+        "armor": 2.4,
+        "visionRadius": 5.5
+      }
+    },
+    {
+      "id": "centipede",
+      "name": "Centipede",
+      "behavior": ["hunt", "raid", "destroyRooms"],
+      "stats": {
+        "health": 74,
+        "speed": 2.1,
+        "attackDamage": 9,
+        "attackRate": 1.1,
+        "armor": 1.8,
+        "visionRadius": 7
+      }
+    },
+    {
+      "id": "rival_ant_colony",
+      "name": "Rival Ant Colony",
+      "behavior": ["raid", "steal", "patrol"],
+      "stats": {
+        "health": 58,
+        "speed": 2.2,
+        "attackDamage": 6,
+        "attackRate": 1.35,
+        "armor": 1.1,
+        "visionRadius": 6
+      }
+    },
+    {
+      "id": "parasite_fly",
+      "name": "Parasite Fly",
+      "behavior": ["hunt", "layEggs", "raid"],
+      "stats": {
+        "health": 30,
+        "speed": 2.7,
+        "attackDamage": 5,
+        "attackRate": 1.5,
+        "armor": 0.6,
+        "visionRadius": 8
+      }
+    },
+    {
+      "id": "mite_swarm",
+      "name": "Mite Swarm",
+      "behavior": ["hunt", "layEggs"],
+      "stats": {
+        "health": 24,
+        "speed": 2.4,
+        "attackDamage": 3,
+        "attackRate": 1.8,
+        "armor": 0.2,
+        "visionRadius": 5
+      }
+    },
+    {
+      "id": "wasp",
+      "name": "Wasp",
+      "behavior": ["patrol", "hunt", "steal"],
+      "stats": {
+        "health": 44,
+        "speed": 3,
+        "attackDamage": 7,
+        "attackRate": 1.25,
+        "armor": 0.9,
+        "visionRadius": 9
+      }
+    },
+    {
+      "id": "frog",
+      "name": "Frog",
+      "behavior": ["hunt", "patrol"],
+      "stats": {
+        "health": 84,
+        "speed": 1.35,
+        "attackDamage": 10,
+        "attackRate": 0.7,
+        "armor": 2.1,
+        "visionRadius": 5
+      }
+    },
+    {
+      "id": "lizard",
+      "name": "Lizard",
+      "behavior": ["hunt", "raid", "destroyRooms"],
+      "stats": {
+        "health": 100,
+        "speed": 1.8,
+        "attackDamage": 13,
+        "attackRate": 0.8,
+        "armor": 2.8,
+        "visionRadius": 7
+      }
+    },
+    {
+      "id": "human_foot",
+      "name": "Human Foot",
+      "behavior": ["raid", "destroyRooms", "stomp"],
+      "stats": {
+        "health": 260,
+        "speed": 1.05,
+        "attackDamage": 26,
+        "attackRate": 0.35,
+        "armor": 4,
+        "visionRadius": 6
+      }
+    }
+  ],
+  "spawnRules": {
+    "baseIntervalSeconds": 19,
+    "waves": [
+      {
+        "minWave": 1,
+        "enemyTypes": ["spider", "beetle", "mite_swarm"]
+      },
+      {
+        "minWave": 4,
+        "enemyTypes": ["centipede", "rival_ant_colony", "parasite_fly"]
+      },
+      {
+        "minWave": 8,
+        "enemyTypes": ["wasp", "frog", "lizard"]
+      },
+      {
+        "minWave": 12,
+        "enemyTypes": ["human_foot", "lizard", "centipede"]
+      }
+    ]
+  }
+}

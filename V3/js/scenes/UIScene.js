@@ -13,45 +13,45 @@ class UIScene extends Phaser.Scene {
 
     const w = this.scale.width;
 
-    this.topBar = this.add.rectangle(w / 2, 24, w, 48, 0x1e1712, 0.92).setDepth(500);
+    this.topBar = this.add.rectangle(w / 2, 24, w, 0, 0x1e1712, 0.92).setDepth(500);
     this.foodText = this.add
-      .text(18, 10, "", {
-        fontSize: "18px",
+      .text(20, 12, "", {
+        fontSize: "24px",
         color: "#f5ead6",
         fontStyle: "bold"
       })
       .setDepth(501);
     this.popText = this.add
-      .text(220, 10, "", {
-        fontSize: "18px",
+      .text(260, 12, "", {
+        fontSize: "24px",
         color: "#f5ead6",
         fontStyle: "bold"
       })
       .setDepth(501);
     this.moraleText = this.add
-      .text(450, 10, "", {
-        fontSize: "18px",
+      .text(560, 12, "", {
+        fontSize: "24px",
         color: "#f5ead6",
         fontStyle: "bold"
       })
       .setDepth(501);
     this.timeText = this.add
-      .text(660, 10, "", {
-        fontSize: "18px",
+      .text(750, 12, "", {
+        fontSize: "24px",
         color: "#f5ead6",
         fontStyle: "bold"
       })
       .setDepth(501);
     this.waveText = this.add
-      .text(860, 10, "", {
-        fontSize: "18px",
+      .text(950, 12, "", {
+        fontSize: "24px",
         color: "#f5ead6",
         fontStyle: "bold"
       })
       .setDepth(501);
 
     this.helpBox = this.add
-      .rectangle(1110, 24, 620, 48, 0x33261d, 0.9)
+      .rectangle(1110, 24, 620, 0, 0x33261d, 0.9)
       .setOrigin(0.5, 0.5)
       .setDepth(500);
     this.helpText = this.add
@@ -59,12 +59,12 @@ class UIScene extends Phaser.Scene {
       .setDepth(501);
 
     this.bottomPanel = this.add
-      .rectangle(240, this.scale.height - 90, 470, 170, 0x1f1813, 0.94)
+      .rectangle(240, this.scale.height - 90, 500, 200, 0x1f1813, 0.94)
       .setStrokeStyle(2, 0x624d39, 1)
       .setDepth(500);
 
     this.roleLabel = this.add
-      .text(26, this.scale.height - 162, "Assign Roles", {
+      .text(26, this.scale.height - 172, "Assign Roles", {
         fontSize: "18px",
         color: "#f5ead6",
         fontStyle: "bold"
@@ -72,7 +72,7 @@ class UIScene extends Phaser.Scene {
       .setDepth(501);
 
     this.buildLabel = this.add
-      .text(26, this.scale.height - 96, "Build Rooms", {
+      .text(26, this.scale.height - 106, "Build Rooms", {
         fontSize: "18px",
         color: "#f5ead6",
         fontStyle: "bold"
@@ -288,4 +288,3 @@ class UIScene extends Phaser.Scene {
     }
   }
 }
-

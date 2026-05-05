@@ -1,0 +1,129 @@
+:root {
+  --bg-0: #080d0b;
+  --bg-1: #102218;
+  --bg-2: #193429;
+  --bg-3: #27483a;
+  --ink: #eef5de;
+  --ink-dim: #bec8aa;
+  --accent: #d8c164;
+  --accent-2: #7cc174;
+  --danger: #cc685e;
+  --warn: #d89a53;
+  --panel: rgba(14, 24, 20, 0.88);
+  --panel-soft: rgba(23, 36, 30, 0.62);
+  --border: rgba(239, 242, 211, 0.18);
+  --shadow: 0 14px 44px rgba(0, 0, 0, 0.42);
+  --radius: 14px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+  color: var(--ink);
+  background:
+    radial-gradient(115% 90% at 0% 0%, #2b4a3a 0%, transparent 58%),
+    radial-gradient(120% 110% at 100% 100%, #3a2f19 0%, transparent 56%),
+    linear-gradient(180deg, var(--bg-0), var(--bg-1) 46%, var(--bg-2));
+  font:
+    400 16px/1.45 "Segoe UI",
+    "Trebuchet MS",
+    "Gill Sans",
+    sans-serif;
+}
+
+body {
+  padding: 14px;
+}
+
+.shell {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  gap: 10px;
+  width: min(100%, 1320px);
+  margin: 0 auto;
+  min-height: calc(100dvh - 28px);
+}
+
+.shell-header,
+.shell-footer {
+  background: var(--panel-soft);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 10px 14px;
+  backdrop-filter: blur(10px);
+}
+
+.shell-header h1 {
+  margin: 0;
+  letter-spacing: 0.04em;
+  font-size: clamp(1.2rem, 2.2vw, 1.8rem);
+}
+
+.shell-header p,
+.shell-footer p {
+  margin: 4px 0 0;
+  color: var(--ink-dim);
+  font-size: 0.92rem;
+}
+
+.game-wrap {
+  position: relative;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: calc(var(--radius) + 4px);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.game-root {
+  min-height: min(74dvh, 820px);
+}
+
+.boot-error {
+  position: absolute;
+  left: 10px;
+  right: 10px;
+  bottom: 10px;
+  margin: 0;
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: rgba(71, 22, 18, 0.92);
+  border: 1px solid rgba(245, 168, 162, 0.48);
+  color: #ffd8d3;
+  font-size: 0.9rem;
+  min-height: 1.1rem;
+}
+
+@media (max-width: 980px) {
+  body {
+    padding: 6px;
+  }
+
+  .shell {
+    min-height: calc(100dvh - 12px);
+    gap: 8px;
+  }
+
+  .shell-header,
+  .shell-footer {
+    padding: 8px 10px;
+  }
+
+  .game-root {
+    min-height: 72dvh;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}

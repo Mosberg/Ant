@@ -1,0 +1,117 @@
+{
+  "globalDecayMultiplier": 1,
+  "starting": {
+    "food": 180,
+    "water": 130,
+    "biomass": 60,
+    "larvae": 30,
+    "pheromones": 40,
+    "stone": 90,
+    "resin": 55,
+    "fungus": 60,
+    "royal_jelly": 20,
+    "crystal": 8
+  },
+  "resources": [
+    {
+      "id": "food",
+      "name": "Food",
+      "production": { "base": 1.15 },
+      "consumption": { "base": 0.92 },
+      "storage": { "base": 240 },
+      "decay": { "perMinute": 0.009 },
+      "tradeValue": 1,
+      "unlock": "start"
+    },
+    {
+      "id": "water",
+      "name": "Water",
+      "production": { "base": 0.65 },
+      "consumption": { "base": 0.5 },
+      "storage": { "base": 180 },
+      "decay": { "perMinute": 0.003 },
+      "tradeValue": 1.2,
+      "unlock": "start"
+    },
+    {
+      "id": "biomass",
+      "name": "Biomass",
+      "production": { "base": 0.28 },
+      "consumption": { "base": 0.14 },
+      "storage": { "base": 140 },
+      "decay": { "perMinute": 0.011 },
+      "tradeValue": 1.8,
+      "unlock": "start"
+    },
+    {
+      "id": "larvae",
+      "name": "Larvae",
+      "production": { "base": 0.18 },
+      "consumption": { "base": 0.06 },
+      "storage": { "base": 120 },
+      "decay": { "perMinute": 0.013 },
+      "tradeValue": 2.2,
+      "unlock": "brood"
+    },
+    {
+      "id": "pheromones",
+      "name": "Pheromones",
+      "production": { "base": 0.45 },
+      "consumption": { "base": 0.2 },
+      "storage": { "base": 160 },
+      "decay": { "perMinute": 0.02 },
+      "tradeValue": 1.6,
+      "unlock": "start"
+    },
+    {
+      "id": "stone",
+      "name": "Stone",
+      "production": { "base": 0.15 },
+      "consumption": { "base": 0.06 },
+      "storage": { "base": 220 },
+      "decay": { "perMinute": 0 },
+      "tradeValue": 1.4,
+      "unlock": "digging"
+    },
+    {
+      "id": "resin",
+      "name": "Resin",
+      "production": { "base": 0.16 },
+      "consumption": { "base": 0.08 },
+      "storage": { "base": 150 },
+      "decay": { "perMinute": 0.001 },
+      "tradeValue": 1.9,
+      "unlock": "surface"
+    },
+    {
+      "id": "fungus",
+      "name": "Fungus",
+      "production": { "base": 0.55 },
+      "consumption": { "base": 0.25 },
+      "storage": { "base": 150 },
+      "decay": { "perMinute": 0.012 },
+      "tradeValue": 1.5,
+      "unlock": "fungus_farm"
+    },
+    {
+      "id": "royal_jelly",
+      "name": "Royal Jelly",
+      "production": { "base": 0.08 },
+      "consumption": { "base": 0.02 },
+      "storage": { "base": 70 },
+      "decay": { "perMinute": 0.01 },
+      "tradeValue": 4.2,
+      "unlock": "queen_chamber"
+    },
+    {
+      "id": "crystal",
+      "name": "Crystal",
+      "production": { "base": 0.04 },
+      "consumption": { "base": 0.01 },
+      "storage": { "base": 90 },
+      "decay": { "perMinute": 0 },
+      "tradeValue": 5,
+      "unlock": "deep_dig"
+    }
+  ]
+}

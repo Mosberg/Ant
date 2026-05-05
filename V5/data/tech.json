@@ -1,0 +1,297 @@
+{
+  "starterTech": [],
+  "techs": [
+    {
+      "id": "stronger_mandibles",
+      "name": "Stronger Mandibles",
+      "category": "biology",
+      "cost": 70,
+      "researchRate": 7,
+      "prerequisites": [],
+      "effects": { "ant.attackDamageMultiplier": 1.08 }
+    },
+    {
+      "id": "hardened_exoskeleton",
+      "name": "Hardened Exoskeleton",
+      "category": "biology",
+      "cost": 85,
+      "researchRate": 7,
+      "prerequisites": ["stronger_mandibles"],
+      "effects": { "ant.armorMultiplier": 1.1 }
+    },
+    {
+      "id": "improved_brood_care",
+      "name": "Improved Brood Care",
+      "category": "biology",
+      "cost": 75,
+      "researchRate": 7,
+      "prerequisites": [],
+      "effects": { "brood.hatchRateMultiplier": 1.12 }
+    },
+    {
+      "id": "efficient_digging",
+      "name": "Efficient Digging",
+      "category": "biology",
+      "cost": 78,
+      "researchRate": 7,
+      "prerequisites": [],
+      "effects": { "dig.powerMultiplier": 1.15 }
+    },
+    {
+      "id": "adaptive_pheroreceptors",
+      "name": "Adaptive Pheroreceptors",
+      "category": "biology",
+      "cost": 88,
+      "researchRate": 7,
+      "prerequisites": ["improved_brood_care"],
+      "effects": { "pheromone.sensitivityMultiplier": 1.15 }
+    },
+    {
+      "id": "nutrient_recycling",
+      "name": "Nutrient Recycling",
+      "category": "biology",
+      "cost": 90,
+      "researchRate": 7,
+      "prerequisites": ["improved_brood_care"],
+      "effects": { "resources.fungusProduction": 1.12 }
+    },
+    {
+      "id": "field_medicine",
+      "name": "Field Medicine",
+      "category": "biology",
+      "cost": 105,
+      "researchRate": 8,
+      "prerequisites": ["adaptive_pheroreceptors"],
+      "effects": { "ant.healPowerMultiplier": 1.2 }
+    },
+    {
+      "id": "resilient_larvae",
+      "name": "Resilient Larvae",
+      "category": "biology",
+      "cost": 120,
+      "researchRate": 8,
+      "prerequisites": ["field_medicine"],
+      "effects": { "brood.survivalMultiplier": 1.18 }
+    },
+
+    {
+      "id": "reinforced_tunnels",
+      "name": "Reinforced Tunnels",
+      "category": "engineering",
+      "cost": 80,
+      "researchRate": 7,
+      "prerequisites": [],
+      "effects": { "tunnel.collapseResistance": 1.16 }
+    },
+    {
+      "id": "advanced_storage",
+      "name": "Advanced Storage",
+      "category": "engineering",
+      "cost": 95,
+      "researchRate": 8,
+      "prerequisites": ["reinforced_tunnels"],
+      "effects": { "storage.capacityMultiplier": 1.2 }
+    },
+    {
+      "id": "structural_supports",
+      "name": "Structural Supports",
+      "category": "engineering",
+      "cost": 92,
+      "researchRate": 7,
+      "prerequisites": ["reinforced_tunnels"],
+      "effects": { "room.durabilityMultiplier": 1.14 }
+    },
+    {
+      "id": "ventilation_optimization",
+      "name": "Ventilation Optimization",
+      "category": "engineering",
+      "cost": 84,
+      "researchRate": 7,
+      "prerequisites": [],
+      "effects": { "morale.environmentMultiplier": 1.1 }
+    },
+    {
+      "id": "excavation_drills",
+      "name": "Excavation Drills",
+      "category": "engineering",
+      "cost": 110,
+      "researchRate": 8,
+      "prerequisites": ["efficient_digging", "structural_supports"],
+      "effects": { "dig.powerMultiplier": 1.22 }
+    },
+    {
+      "id": "hydro_channels",
+      "name": "Hydro Channels",
+      "category": "engineering",
+      "cost": 96,
+      "researchRate": 7,
+      "prerequisites": ["ventilation_optimization"],
+      "effects": { "resources.waterProduction": 1.2 }
+    },
+    {
+      "id": "fungal_bioreactors",
+      "name": "Fungal Bioreactors",
+      "category": "engineering",
+      "cost": 108,
+      "researchRate": 8,
+      "prerequisites": ["hydro_channels"],
+      "effects": { "resources.fungusProduction": 1.22 }
+    },
+    {
+      "id": "crystal_refining",
+      "name": "Crystal Refining",
+      "category": "engineering",
+      "cost": 130,
+      "researchRate": 8,
+      "prerequisites": ["advanced_storage"],
+      "effects": { "resources.crystalProduction": 1.24 }
+    },
+
+    {
+      "id": "long_lasting_trails",
+      "name": "Long-lasting Trails",
+      "category": "pheromones",
+      "cost": 88,
+      "researchRate": 7,
+      "prerequisites": [],
+      "effects": { "pheromone.decayMultiplier": 0.85 }
+    },
+    {
+      "id": "stronger_signals",
+      "name": "Stronger Signals",
+      "category": "pheromones",
+      "cost": 96,
+      "researchRate": 7,
+      "prerequisites": ["long_lasting_trails"],
+      "effects": { "pheromone.intensityMultiplier": 1.2 }
+    },
+    {
+      "id": "multilayered_pheromones",
+      "name": "Multi-Layered Pheromones",
+      "category": "pheromones",
+      "cost": 110,
+      "researchRate": 8,
+      "prerequisites": ["stronger_signals"],
+      "effects": { "pheromone.multiLayer": 1.2 }
+    },
+    {
+      "id": "directional_markers",
+      "name": "Directional Markers",
+      "category": "pheromones",
+      "cost": 92,
+      "researchRate": 7,
+      "prerequisites": ["long_lasting_trails"],
+      "effects": { "ant.pathingAccuracy": 1.14 }
+    },
+    {
+      "id": "danger_suppression",
+      "name": "Danger Suppression",
+      "category": "pheromones",
+      "cost": 102,
+      "researchRate": 8,
+      "prerequisites": ["directional_markers"],
+      "effects": { "morale.threatResistance": 1.15 }
+    },
+    {
+      "id": "rally_waveforms",
+      "name": "Rally Waveforms",
+      "category": "pheromones",
+      "cost": 118,
+      "researchRate": 8,
+      "prerequisites": ["multilayered_pheromones"],
+      "effects": { "combat.rallyMultiplier": 1.2 }
+    },
+
+    {
+      "id": "acid_upgrade",
+      "name": "Acid Upgrade",
+      "category": "combat",
+      "cost": 112,
+      "researchRate": 8,
+      "prerequisites": ["stronger_mandibles"],
+      "effects": { "ant.acidDamageMultiplier": 1.24 }
+    },
+    {
+      "id": "armor_plating",
+      "name": "Armor Plating",
+      "category": "combat",
+      "cost": 118,
+      "researchRate": 8,
+      "prerequisites": ["hardened_exoskeleton"],
+      "effects": { "ant.armorMultiplier": 1.2 }
+    },
+    {
+      "id": "formation_fighting",
+      "name": "Formation Fighting",
+      "category": "combat",
+      "cost": 120,
+      "researchRate": 8,
+      "prerequisites": ["armor_plating"],
+      "effects": { "combat.formationBonus": 1.18 }
+    },
+    {
+      "id": "venom_resistance",
+      "name": "Venom Resistance",
+      "category": "combat",
+      "cost": 104,
+      "researchRate": 8,
+      "prerequisites": ["field_medicine"],
+      "effects": { "ant.dotResistance": 1.2 }
+    },
+    {
+      "id": "siege_drills",
+      "name": "Siege Drills",
+      "category": "combat",
+      "cost": 128,
+      "researchRate": 8,
+      "prerequisites": ["formation_fighting"],
+      "effects": { "combat.structureDamage": 1.26 }
+    },
+    {
+      "id": "elite_worker_unlock",
+      "name": "Elite Worker Unlocks",
+      "category": "combat",
+      "cost": 96,
+      "researchRate": 8,
+      "prerequisites": ["advanced_storage"],
+      "effects": { "unlock.eliteWorker": 1 }
+    },
+
+    {
+      "id": "queen_fertility",
+      "name": "Queen Fertility",
+      "category": "royal",
+      "cost": 130,
+      "researchRate": 8,
+      "prerequisites": ["improved_brood_care", "reinforced_tunnels"],
+      "effects": { "queen.spawnRateMultiplier": 1.2 }
+    },
+    {
+      "id": "royal_jelly_efficiency",
+      "name": "Royal Jelly Efficiency",
+      "category": "royal",
+      "cost": 116,
+      "researchRate": 8,
+      "prerequisites": ["queen_fertility"],
+      "effects": { "resources.royalJellyUseMultiplier": 0.84 }
+    },
+    {
+      "id": "elite_ant_unlocks",
+      "name": "Elite Ant Unlocks",
+      "category": "royal",
+      "cost": 150,
+      "researchRate": 9,
+      "prerequisites": ["royal_jelly_efficiency", "formation_fighting"],
+      "effects": { "unlock.eliteAnts": 1 }
+    },
+    {
+      "id": "sovereign_command",
+      "name": "Sovereign Command",
+      "category": "royal",
+      "cost": 170,
+      "researchRate": 9,
+      "prerequisites": ["elite_ant_unlocks", "rally_waveforms"],
+      "effects": { "colony.globalEfficiency": 1.2 }
+    }
+  ]
+}
