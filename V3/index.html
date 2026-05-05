@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
+    />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <title>Ant Colony Manager V3</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.90.0/dist/phaser.min.js"></script>
+
+    <!-- Core -->
+    <script defer src="js/core/constants.js"></script>
+    <script defer src="js/core/mobileSupport.js"></script>
+
+    <!-- Managers and entities -->
+    <script defer src="js/managers/SettingsManager.js"></script>
+    <script defer src="js/managers/SaveManager.js"></script>
+    <script defer src="js/managers/AudioManager.js"></script>
+    <script defer src="js/managers/GridPathfinder.js"></script>
+    <script defer src="js/managers/ResourceManager.js"></script>
+    <script defer src="js/entities/Room.js"></script>
+    <script defer src="js/managers/RoomManager.js"></script>
+    <script defer src="js/entities/AntUnit.js"></script>
+    <script defer src="js/entities/EnemyUnit.js"></script>
+    <script defer src="js/managers/AntManager.js"></script>
+    <script defer src="js/managers/EnemyManager.js"></script>
+
+    <!-- Scenes -->
+    <script defer src="js/scenes/BootScene.js"></script>
+    <script defer src="js/scenes/PreloadScene.js"></script>
+    <script defer src="js/scenes/MainMenuScene.js"></script>
+    <script defer src="js/scenes/PauseScene.js"></script>
+    <script defer src="js/scenes/UIScene.js"></script>
+    <script defer src="js/scenes/GameScene.js"></script>
+
+    <!-- Game bootstrap -->
+    <script defer src="js/main.js"></script>
+  </head>
+  <body>
+    <div id="app-shell">
+      <div id="game-root"></div>
+    </div>
+  </body>
+</html>

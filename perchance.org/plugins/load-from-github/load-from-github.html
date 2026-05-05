@@ -1,0 +1,37 @@
+<!--
+  GitHub Loader Plugin
+  This file implements the plugin described in the instructions.
+  It allows loading JS, CSS, HTML, MD, and JSON from GitHub raw URLs.
+-->
+<div id="mainCtn" style="max-width: 800px; margin: 20px auto; font-family: sans-serif">
+  <h1>GitHub Loader Plugin</h1>
+  <p>Enter a raw GitHub URL to load content directly into the page.</p>
+
+  <div style="margin-bottom: 10px">
+    <input
+      id="urlInput"
+      type="text"
+      style="width: 70%; padding: 8px"
+      placeholder="https://raw.githubusercontent.com/..."
+      value="https://raw.githubusercontent.com/Mosberg/Ant/refs/heads/main/index.html"
+    />
+    <select id="typeSelect" style="padding: 8px">
+      <option value="html">HTML</option>
+      <option value="css">CSS</option>
+      <option value="js">JS</option>
+      <option value="md">Markdown</option>
+      <option value="json">JSON</option>
+    </select>
+    <button id="loadBtn" style="padding: 8px 16px">Load</button>
+  </div>
+
+  <div id="statusEl" hidden style="padding: 10px; margin-bottom: 10px; border-radius: 4px"></div>
+
+  <div
+    id="outputCtn"
+    style="text-align: left; border-top: 1px solid #ccc; padding-top: 10px; min-height: 50px"
+  ></div>
+</div>
+
+<!-- Markdown Parser Library -->
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>

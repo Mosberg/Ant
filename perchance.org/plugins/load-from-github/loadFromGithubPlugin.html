@@ -1,0 +1,45 @@
+<div id="statusEl" hidden style="padding: 8px; margin-bottom: 8px; border-radius: 4px"></div>
+<div
+  id="outputEl"
+  data-github-src="https://raw.githubusercontent.com/Mosberg/Ant/refs/heads/main/README.md"
+  data-github-type="md"
+  data-github-status="#statusEl"
+  data-github-trigger="auto"
+  style="border: 1px solid #ddd; padding: 10px; min-height: 60px"
+></div>
+
+<div style="margin-top: 10px">
+  <button id="reloadBtn" style="padding: 8px 12px">Reload README</button>
+  <button id="addDynamicBtn" style="padding: 8px 12px; margin-left: 8px">Add Dynamic Loader</button>
+</div>
+
+<div id="dynamicArea" style="margin-top: 10px"></div>
+
+<script>
+  document.getElementById("reloadBtn").addEventListener("click", function () {
+    window.loadFromGitHub.scanAuto("#outputEl", { force: true });
+  });
+
+  document.getElementById("addDynamicBtn").addEventListener("click", function () {
+    var host = document.createElement("div");
+    host.style.border = "1px dashed #bbb";
+    host.style.padding = "10px";
+    host.style.marginTop = "10px";
+
+    var statusId = "dynStatus-" + Date.now();
+    var outId = "dynOut-" + Date.now();
+
+    host.innerHTML =
+      "<div id='" +
+      statusId +
+      "' hidden style='padding:8px; margin-bottom:8px; border-radius:4px;'></div>" +
+      "<div id='" +
+      outId +
+      "' data-github-src='https://raw.githubusercontent.com/Mosberg/Ant/refs/heads/main/index.html' data-github-type='html' data-github-status='#" +
+      statusId +
+      "' data-github-trigger='auto' style='min-height:50px;'></div>";
+
+    document.getElementById("dynamicArea").appendChild(host);
+    // No manual call needed. The plugin observer picks this up automatically.
+  });
+</script>
