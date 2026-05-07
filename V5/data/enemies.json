@@ -151,5 +151,10 @@
         "enemyTypes": ["human_foot", "lizard", "centipede"]
       }
     ]
+  },
+  "pathing": {
+    "repathIntervalSeconds": 0.45,
+    "maxVisitedNodes": 1700,
+    "waypointReachDistance": 0.19
   }
 }

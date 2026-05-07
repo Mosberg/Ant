@@ -158,6 +158,14 @@ export class RoomSystem extends BaseSystem {
       moraleBonus: 0
     };
 
+    const tech = this.engine.getSystem("tech");
+    const storageTechMultiplier = Number(tech?.getEffect("storage.capacityMultiplier", 1) ?? 1);
+    const hatchTechMultiplier = Number(tech?.getEffect("brood.hatchRateMultiplier", 1) ?? 1);
+    const moraleEnvironmentMultiplier = Number(
+      tech?.getEffect("morale.environmentMultiplier", 1) ?? 1
+    );
+    const roomDefenseMultiplier = Number(tech?.getEffect("room.durabilityMultiplier", 1) ?? 1);
+
     for (const room of this.rooms) {
       if (!room.isComplete) {
         continue;
@@ -173,7 +181,7 @@ export class RoomSystem extends BaseSystem {
 
       for (const [resourceId, value] of Object.entries(effects.storageBonus ?? {})) {
         output.storageBonus[resourceId] =
-          (output.storageBonus[resourceId] ?? 0) + Number(value) * scale;
+          (output.storageBonus[resourceId] ?? 0) + Number(value) * scale * storageTechMultiplier;
       }
 
       for (const [resourceId, value] of Object.entries(effects.productionMultiplier ?? {})) {
@@ -190,7 +198,7 @@ export class RoomSystem extends BaseSystem {
       output.healingRateBonus += Number(effects.healingRateBonus ?? 0) * scale;
       output.researchPerSecond += Number(effects.researchPerSecond ?? 0) * scale;
       output.defenseBonus += Number(effects.defenseBonus ?? 0) * scale;
-      output.moraleBonus += Number(effects.moraleBonus ?? 0) * scale;
+      output.moraleBonus += Number(effects.moraleBonus ?? 0) * scale * moraleEnvironmentMultiplier;
 
       for (const synergy of room.synergyBonuses ?? []) {
         const near = this.getClosestRoom(
@@ -209,10 +217,13 @@ export class RoomSystem extends BaseSystem {
             output.productionMultiplier[synergy.resource] =
               (output.productionMultiplier[synergy.resource] ?? 1) * Number(synergy.multiplier);
           }
-          output.moraleBonus += Number(synergy.moraleBonus ?? 0);
+          output.moraleBonus += Number(synergy.moraleBonus ?? 0) * moraleEnvironmentMultiplier;
         }
       }
     }
+
+    output.hatchRateMultiplier *= hatchTechMultiplier;
+    output.defenseBonus *= roomDefenseMultiplier;
 
     return output;
   }
@@ -228,11 +239,19 @@ export class RoomSystem extends BaseSystem {
   update(dt) {
     this.aggregateEffectsTimer -= dt;
 
+    const tech = this.engine.getSystem("tech");
+    const buildSpeed = Math.max(0.1, Number(tech?.getEffect("room.buildSpeedMultiplier", 1) ?? 1));
+    const upgradeSpeed = Math.max(
+      0.1,
+      Number(tech?.getEffect("room.upgradeSpeedMultiplier", 1) ?? 1)
+    );
+
     const terrain = this.engine.getSystem("terrain");
     for (const room of this.rooms) {
       const typeDef = this.roomTypeMap.get(room.typeId);
       const wasComplete = room.isComplete;
-      room.update(dt, typeDef);
+      const speedMultiplier = room.isComplete ? upgradeSpeed : buildSpeed;
+      room.update(dt * speedMultiplier, typeDef);
       if (!wasComplete && room.isComplete) {
         terrain?.setRoomTile(room.tilePosition.x, room.tilePosition.y);
       }

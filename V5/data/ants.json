@@ -95,7 +95,26 @@
   },
   "hatchIntervalSeconds": 16,
   "ai": {
-    "decisionIntervalSeconds": 0.35
+    "decisionIntervalSeconds": 0.35,
+    "stateHoldSeconds": 0.55,
+    "maxDecisionsPerTick": 28,
+    "dangerThreshold": 0.95,
+    "useJobQueues": true,
+    "jobQueueRefreshSeconds": 0.45,
+    "jobClaimTtlSeconds": 4,
+    "maxHaulJobs": 22,
+    "maxInterceptJobs": 16,
+    "maxFrontierJobs": 20
+  },
+  "pathing": {
+    "repathIntervalSeconds": 0.5,
+    "maxVisitedNodes": 1700,
+    "waypointReachDistance": 0.17
+  },
+  "morphing": {
+    "foodCostPerAnt": 4,
+    "biomassCostPerAnt": 1,
+    "royalJellyCostPerAnt": 1
   },
   "startingColony": [
     { "typeId": "basic_worker", "count": 12 },

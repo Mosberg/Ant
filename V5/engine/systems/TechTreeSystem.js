@@ -25,6 +25,10 @@ export class TechTreeSystem extends BaseSystem {
     }
   }
 
+  getSetting(path, fallback) {
+    return this.engine.getSystem("settings")?.get(path, fallback) ?? fallback;
+  }
+
   isResearched(techId) {
     return this.researched.has(techId);
   }
@@ -100,6 +104,19 @@ export class TechTreeSystem extends BaseSystem {
     return [...this.techMap.values()].filter((tech) => this.canResearch(tech.id));
   }
 
+  getTechState(techId) {
+    if (this.researched.has(techId)) {
+      return "researched";
+    }
+    if (this.currentResearchId === techId) {
+      return "current";
+    }
+    if (this.canResearch(techId)) {
+      return "available";
+    }
+    return "locked";
+  }
+
   getEffect(path, fallback = 1) {
     return getByPath(this.activeEffects, path, fallback);
   }
@@ -114,9 +131,14 @@ export class TechTreeSystem extends BaseSystem {
     this.addResearchPoints((labRate + jellyBonus) * dt);
 
     if (!this.currentResearchId) {
-      const available = this.getAvailableTechs();
-      if (available.length > 0) {
-        this.startResearch(available[0].id);
+      const autoResearch = Boolean(this.getSetting("gameplay.autoResearchEnabled", true));
+      if (autoResearch) {
+        const available = this.getAvailableTechs().sort(
+          (a, b) => Number(a.cost ?? 0) - Number(b.cost ?? 0)
+        );
+        if (available.length > 0) {
+          this.startResearch(available[0].id);
+        }
       }
       return;
     }

@@ -82,11 +82,14 @@ export class ResourceSystem extends BaseSystem {
     const roomSystem = this.engine.getSystem("rooms");
     const weather = this.engine.getSystem("weather");
     const difficulty = this.engine.getSystem("difficulty");
+    const tech = this.engine.getSystem("tech");
 
     const effects = roomSystem?.getAggregateEffects() ?? {};
     const abundance = Number(difficulty?.getMultiplier("resourceAbundanceMultiplier", 1) ?? 1);
     const weatherFoodModifier = Number(weather?.getModifier("foodProductionMultiplier", 1) ?? 1);
     const weatherBroodModifier = Number(weather?.getModifier("broodSpeedMultiplier", 1) ?? 1);
+    const globalEfficiency = Number(tech?.getEffect("colony.globalEfficiency", 1) ?? 1);
+    const storageTechMultiplier = Number(tech?.getEffect("storage.capacityMultiplier", 1) ?? 1);
 
     const frameDelta = {};
 
@@ -99,9 +102,23 @@ export class ResourceSystem extends BaseSystem {
       const baseConsumption = Number(def.consumption?.base ?? 0);
       const decayPerMinute = Number(def.decay?.perMinute ?? 0);
 
-      this.capacities[id] = Number(def.storage?.base ?? 200) + storageBonus;
+      const resourceProductionTechMultiplier = Number(
+        tech?.getEffect(`resources.${id}Production`, 1) ?? 1
+      );
+      const resourceConsumptionTechMultiplier = Number(
+        tech?.getEffect(`resources.${id}Consumption`, 1) ?? 1
+      );
 
-      let production = baseProduction * dt * multiplier * abundance;
+      this.capacities[id] =
+        (Number(def.storage?.base ?? 200) + storageBonus) * storageTechMultiplier;
+
+      let production =
+        baseProduction *
+        dt *
+        multiplier *
+        abundance *
+        resourceProductionTechMultiplier *
+        globalEfficiency;
       if (id === "food" || id === "fungus") {
         production *= weatherFoodModifier;
       }
@@ -109,7 +126,9 @@ export class ResourceSystem extends BaseSystem {
         production *= weatherBroodModifier;
       }
 
-      const consumption = baseConsumption * dt * passiveConsumption;
+      const consumption =
+        (baseConsumption * dt * passiveConsumption * resourceConsumptionTechMultiplier) /
+        Math.max(0.1, globalEfficiency);
       const decay =
         this.values[id] *
         (decayPerMinute / 60) *

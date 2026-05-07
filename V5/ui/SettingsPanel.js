@@ -12,7 +12,31 @@ const SETTINGS_ROWS = [
   { label: "Colorblind Mode", path: "accessibility.colorblindMode" },
   { label: "UI Scale", path: "ui.scale" },
   { label: "Autosave", path: "gameplay.autosaveEnabled" },
-  { label: "Simulation Depth", path: "gameplay.simulationDepth" }
+  { label: "Auto Research", path: "gameplay.autoResearchEnabled" },
+  { label: "Morph Food Cost", path: "gameplay.antMorphFoodCost" },
+  { label: "Morph Biomass", path: "gameplay.antMorphBiomassCost" },
+  { label: "Morph Jelly", path: "gameplay.antMorphRoyalJellyCost" },
+  { label: "Dig Power", path: "gameplay.digPowerScale" },
+  { label: "Simulation Depth", path: "gameplay.simulationDepth" },
+  { label: "AI Think Interval", path: "ai.decisionIntervalSeconds" },
+  { label: "AI State Hold", path: "ai.stateHoldSeconds" },
+  { label: "AI Decisions/Tick", path: "ai.maxDecisionsPerTick" },
+  { label: "AI Danger Threshold", path: "ai.dangerPheromoneThreshold" },
+  { label: "AI Job Queues", path: "ai.useJobQueues" },
+  { label: "Queue Refresh", path: "ai.jobQueueRefreshSeconds" },
+  { label: "Job Claim TTL", path: "ai.jobClaimTtlSeconds" },
+  { label: "Soldier Hunt Range", path: "ai.soldierHuntRangeBonus" },
+  { label: "Combat Pack Radius", path: "ai.combatPackRadius" },
+  { label: "Pack Dmg Per Mate", path: "ai.combatPackDamagePerMate" },
+  { label: "Combat Pack Max", path: "ai.combatPackMaxBonus" },
+  { label: "Path Cache", path: "pathfinding.enableCache" },
+  { label: "Role Path Profiles", path: "pathfinding.useRoleProfiles" },
+  { label: "Danger Cost Scale", path: "pathfinding.dangerCostScale" },
+  { label: "Diagonal Pathing", path: "pathfinding.allowDiagonal" },
+  { label: "Ant Pathing", path: "pathfinding.enableAntPathing" },
+  { label: "Enemy Pathing", path: "pathfinding.enableEnemyPathing" },
+  { label: "Max Path Nodes", path: "pathfinding.maxVisitedNodes" },
+  { label: "Repath Interval", path: "pathfinding.repathIntervalSeconds" }
 ];
 
 function formatValue(value) {
@@ -32,8 +56,10 @@ export class SettingsPanel {
     this.visible = false;
     this.rows = [];
 
-    const panelWidth = 420;
-    const panelHeight = 430;
+    const rowHeight = 24;
+    const panelWidth = 460;
+    const desiredHeight = 96 + SETTINGS_ROWS.length * rowHeight;
+    const panelHeight = Math.min(scene.scale.height - 24, Math.max(430, desiredHeight));
     const x = scene.scale.width * 0.5 - panelWidth * 0.5;
     const y = scene.scale.height * 0.5 - panelHeight * 0.5;
 
@@ -67,7 +93,7 @@ export class SettingsPanel {
       const line = scene.add
         .text(16, yOffset, "", {
           fontFamily: "Consolas, monospace",
-          fontSize: "14px",
+          fontSize: "13px",
           color: "#cfe8ca"
         })
         .setInteractive({ useHandCursor: true });
@@ -81,10 +107,10 @@ export class SettingsPanel {
         node: line
       });
       this.root.add(line);
-      yOffset += 29;
+      yOffset += rowHeight;
     }
 
-    const hint = scene.add.text(16, panelHeight - 38, "Click any row to cycle values", {
+    const hint = scene.add.text(16, panelHeight - 30, "Click any row to cycle values", {
       fontFamily: "Consolas, monospace",
       fontSize: "12px",
       color: "#96b399"

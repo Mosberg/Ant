@@ -6,7 +6,77 @@
     "tileSize": 16
   },
   "pathfinding": {
-    "maxNodes": 1600
+    "maxNodes": 1700,
+    "cacheTtlSeconds": 4,
+    "cacheMaxEntries": 1200,
+    "allowDiagonal": true,
+    "tileCosts": {
+      "tunnel": 1,
+      "room": 0.92,
+      "surface": 1.18
+    },
+    "roleProfiles": {
+      "default": {
+        "tileMultipliers": {
+          "tunnel": 1,
+          "room": 0.95,
+          "surface": 1.15
+        },
+        "dangerWeight": 0.08,
+        "foodTrailWeight": 0,
+        "frontierBonus": 0,
+        "exploredPenalty": 0,
+        "floodedPenalty": 4.5
+      },
+      "worker_hauler": {
+        "tileMultipliers": {
+          "tunnel": 0.88,
+          "room": 0.82,
+          "surface": 1.35
+        },
+        "dangerWeight": 0.22,
+        "foodTrailWeight": 0.1,
+        "frontierBonus": 0,
+        "exploredPenalty": 0,
+        "floodedPenalty": 6
+      },
+      "soldier_intercept": {
+        "tileMultipliers": {
+          "tunnel": 1,
+          "room": 0.95,
+          "surface": 0.95
+        },
+        "dangerWeight": -0.04,
+        "foodTrailWeight": 0,
+        "frontierBonus": 0,
+        "exploredPenalty": 0,
+        "floodedPenalty": 3.2
+      },
+      "scout_frontier": {
+        "tileMultipliers": {
+          "tunnel": 1,
+          "room": 1,
+          "surface": 0.92
+        },
+        "dangerWeight": 0.04,
+        "foodTrailWeight": 0,
+        "frontierBonus": 0.22,
+        "exploredPenalty": 0.04,
+        "floodedPenalty": 2.8
+      },
+      "enemy_raider": {
+        "tileMultipliers": {
+          "tunnel": 0.95,
+          "room": 0.82,
+          "surface": 0.98
+        },
+        "dangerWeight": -0.06,
+        "foodTrailWeight": 0,
+        "frontierBonus": 0,
+        "exploredPenalty": 0,
+        "floodedPenalty": 3.2
+      }
+    }
   },
   "pheromones": {
     "defaultDecayPerSecond": 0.24

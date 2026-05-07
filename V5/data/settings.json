@@ -10,7 +10,12 @@
       "difficulty": "Balanced",
       "autosaveEnabled": true,
       "autosaveSeconds": 45,
-      "simulationDepth": "full"
+      "simulationDepth": "full",
+      "autoResearchEnabled": true,
+      "antMorphFoodCost": 4,
+      "antMorphBiomassCost": 1,
+      "antMorphRoyalJellyCost": 1,
+      "digPowerScale": 1
     },
     "graphics": {
       "quality": "High",
@@ -22,6 +27,35 @@
     },
     "ui": {
       "scale": 1
+    },
+    "ai": {
+      "decisionIntervalSeconds": 0.35,
+      "stateHoldSeconds": 0.55,
+      "maxDecisionsPerTick": 28,
+      "dangerPheromoneThreshold": 0.95,
+      "useJobQueues": true,
+      "jobQueueRefreshSeconds": 0.45,
+      "jobClaimTtlSeconds": 4,
+      "maxHaulJobs": 22,
+      "maxInterceptJobs": 16,
+      "maxFrontierJobs": 20,
+      "soldierHuntRangeBonus": 4.5,
+      "combatPackRadius": 4.4,
+      "combatPackDamagePerMate": 0.07,
+      "combatPackMaxBonus": 0.45,
+      "combatPackRadiusOffset": 0.75,
+      "combatPackSlots": 8
+    },
+    "pathfinding": {
+      "enableCache": true,
+      "allowDiagonal": true,
+      "enableAntPathing": true,
+      "enableEnemyPathing": true,
+      "useRoleProfiles": true,
+      "dangerCostScale": 1,
+      "maxVisitedNodes": 1700,
+      "repathIntervalSeconds": 0.5,
+      "waypointReachDistance": 0.17
     },
     "controls": {
       "defaultTool": "select"
@@ -42,7 +76,12 @@
       "autosaveSeconds": { "type": "number", "min": 15, "max": 180, "step": 5 },
       "simulationDepth": {
         "options": ["light", "standard", "full"]
-      }
+      },
+      "autoResearchEnabled": { "type": "boolean" },
+      "antMorphFoodCost": { "type": "number", "min": 0, "max": 20, "step": 1 },
+      "antMorphBiomassCost": { "type": "number", "min": 0, "max": 10, "step": 1 },
+      "antMorphRoyalJellyCost": { "type": "number", "min": 0, "max": 10, "step": 1 },
+      "digPowerScale": { "type": "number", "min": 0.2, "max": 3, "step": 0.05 }
     },
     "graphics": {
       "quality": { "options": ["Low", "Medium", "High", "Ultra"] },
@@ -56,6 +95,35 @@
     },
     "ui": {
       "scale": { "type": "number", "min": 0.8, "max": 1.5, "step": 0.05 }
+    },
+    "ai": {
+      "decisionIntervalSeconds": { "type": "number", "min": 0.08, "max": 1.2, "step": 0.02 },
+      "stateHoldSeconds": { "type": "number", "min": 0, "max": 2, "step": 0.05 },
+      "maxDecisionsPerTick": { "type": "number", "min": 4, "max": 100, "step": 1 },
+      "dangerPheromoneThreshold": { "type": "number", "min": 0.2, "max": 3.5, "step": 0.05 },
+      "useJobQueues": { "type": "boolean" },
+      "jobQueueRefreshSeconds": { "type": "number", "min": 0.15, "max": 2, "step": 0.05 },
+      "jobClaimTtlSeconds": { "type": "number", "min": 0.5, "max": 12, "step": 0.5 },
+      "maxHaulJobs": { "type": "number", "min": 2, "max": 80, "step": 1 },
+      "maxInterceptJobs": { "type": "number", "min": 2, "max": 60, "step": 1 },
+      "maxFrontierJobs": { "type": "number", "min": 2, "max": 80, "step": 1 },
+      "soldierHuntRangeBonus": { "type": "number", "min": 0, "max": 14, "step": 0.5 },
+      "combatPackRadius": { "type": "number", "min": 1, "max": 10, "step": 0.25 },
+      "combatPackDamagePerMate": { "type": "number", "min": 0, "max": 0.25, "step": 0.01 },
+      "combatPackMaxBonus": { "type": "number", "min": 0, "max": 1.5, "step": 0.05 },
+      "combatPackRadiusOffset": { "type": "number", "min": 0.2, "max": 3, "step": 0.05 },
+      "combatPackSlots": { "type": "number", "min": 4, "max": 20, "step": 1 }
+    },
+    "pathfinding": {
+      "enableCache": { "type": "boolean" },
+      "allowDiagonal": { "type": "boolean" },
+      "enableAntPathing": { "type": "boolean" },
+      "enableEnemyPathing": { "type": "boolean" },
+      "useRoleProfiles": { "type": "boolean" },
+      "dangerCostScale": { "type": "number", "min": 0, "max": 3, "step": 0.05 },
+      "maxVisitedNodes": { "type": "number", "min": 120, "max": 6000, "step": 20 },
+      "repathIntervalSeconds": { "type": "number", "min": 0.08, "max": 2, "step": 0.02 },
+      "waypointReachDistance": { "type": "number", "min": 0.08, "max": 0.6, "step": 0.01 }
     },
     "controls": {
       "defaultTool": {

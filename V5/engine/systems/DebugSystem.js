@@ -22,7 +22,16 @@ export class DebugSystem extends BaseSystem {
       enemies: 0,
       rooms: 0,
       pathfindingQueries: 0,
+      pathfindingAvgVisited: 0,
+      pathfindingCacheHits: 0,
+      pathfindingCacheMisses: 0,
+      pathfindingFailedQueries: 0,
       aiStateCounts: {},
+      aiQueues: {
+        haul: 0,
+        intercept: 0,
+        frontier: 0
+      },
       pheromoneTiles: 0,
       roomCounts: {},
       recentEvents: [],
@@ -70,18 +79,24 @@ export class DebugSystem extends BaseSystem {
     const pheromones = this.engine.getSystem("pheromones");
     const events = this.engine.getSystem("events");
     const resources = this.engine.getSystem("resources");
+    const ai = this.engine.getSystem("ai");
 
     this.metrics.fps = Number(scene?.game?.loop?.actualFps ?? 0);
     this.metrics.ants = ants?.getAliveAnts().length ?? 0;
     this.metrics.enemies = enemies?.getAliveEnemies().length ?? 0;
     this.metrics.rooms = rooms?.rooms?.length ?? 0;
     this.metrics.pathfindingQueries = Number(pathfinding?.metrics?.queries ?? 0);
+    this.metrics.pathfindingAvgVisited = Number(pathfinding?.metrics?.averageVisited ?? 0);
+    this.metrics.pathfindingCacheHits = Number(pathfinding?.metrics?.cacheHits ?? 0);
+    this.metrics.pathfindingCacheMisses = Number(pathfinding?.metrics?.cacheMisses ?? 0);
+    this.metrics.pathfindingFailedQueries = Number(pathfinding?.metrics?.failedQueries ?? 0);
 
     const stateCounts = {};
     for (const ant of ants.getAliveAnts()) {
       stateCounts[ant.state] = (stateCounts[ant.state] ?? 0) + 1;
     }
     this.metrics.aiStateCounts = stateCounts;
+    this.metrics.aiQueues = ai?.getQueueSnapshot?.() ?? this.metrics.aiQueues;
 
     this.metrics.pheromoneTiles = pheromones?.trails?.size ?? 0;
     this.metrics.roomCounts = rooms?.getRoomCounts() ?? {};

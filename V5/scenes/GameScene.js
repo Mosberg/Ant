@@ -38,13 +38,26 @@ export class GameScene extends Phaser.Scene {
     this.engine = null;
     this.currentTool = "select";
     this.selectedRoomType = "food_storage";
-    this.selectedAntId = null;
+    this.selectedAntIds = new Set();
+    this.selectedRoomId = null;
+    this.selectedMorphTypeIndex = 0;
+    this.selectionBox = {
+      active: false,
+      pointerId: null,
+      additive: false,
+      dragged: false,
+      start: { x: 0, y: 0 },
+      end: { x: 0, y: 0 }
+    };
     this.pointerPanning = false;
     this.panPointerId = null;
     this.lastPointer = { x: 0, y: 0 };
+    this.worldWidth = 0;
+    this.worldHeight = 0;
     this.zoomMin = 0.38;
     this.zoomMax = 2.8;
     this.zoomStep = 1.14;
+    this.hintBarHeight = 32;
     this.lossLabel = null;
     this.debugHint = null;
   }
@@ -74,6 +87,8 @@ export class GameScene extends Phaser.Scene {
 
     const worldWidth = terrain.width * terrain.tileSize;
     const worldHeight = terrain.height * terrain.tileSize;
+    this.worldWidth = worldWidth;
+    this.worldHeight = worldHeight;
 
     this.cameras.main.setBounds(0, 0, worldWidth, worldHeight);
     this.cameras.main.centerOn(worldWidth * 0.5, worldHeight * 0.5);
@@ -82,16 +97,6 @@ export class GameScene extends Phaser.Scene {
     this.overlayGraphics = this.add.graphics();
     this.entityGraphics = this.add.graphics();
     this.uiGraphics = this.add.graphics();
-
-    this.controlHint = this.add
-      .text(10, this.scale.height - 14, "", {
-        fontFamily: "Consolas, monospace",
-        fontSize: "12px",
-        color: "#9ec49f"
-      })
-      .setScrollFactor(0)
-      .setOrigin(0, 1)
-      .setDepth(100);
 
     this.pendingEventText = this.add
       .text(this.scale.width * 0.5, 104, "", {
@@ -111,6 +116,11 @@ export class GameScene extends Phaser.Scene {
       .setDepth(150)
       .setVisible(false);
 
+    this.scale.on("resize", this.handleScaleResize, this);
+    this.events.once("shutdown", () => {
+      this.scale.off("resize", this.handleScaleResize, this);
+    });
+
     this.registerInputHandlers();
     this.registerEngineListeners();
 
@@ -121,7 +131,70 @@ export class GameScene extends Phaser.Scene {
       gameSceneKey: "GameScene"
     });
 
+    this.clampCameraToBounds();
+
     this.renderWorld();
+  }
+
+  handleScaleResize(gameSize) {
+    this.pendingEventText?.setPosition(gameSize.width * 0.5, 104);
+    this.clampCameraToBounds();
+  }
+
+  clampCameraToBounds() {
+    if (!this.engine || this.worldWidth <= 0 || this.worldHeight <= 0) {
+      return;
+    }
+
+    const camera = this.cameras.main;
+
+    const minZoomByWidth = camera.width / this.worldWidth;
+    const minZoomByHeight = camera.height / this.worldHeight;
+    const effectiveMinZoom = Math.max(this.zoomMin, minZoomByWidth, minZoomByHeight);
+    if (camera.zoom < effectiveMinZoom) {
+      camera.setZoom(effectiveMinZoom);
+    }
+
+    const viewWidth = camera.width / camera.zoom;
+    const viewHeight = camera.height / camera.zoom;
+
+    if (viewWidth >= this.worldWidth) {
+      camera.scrollX = (this.worldWidth - viewWidth) * 0.5;
+    } else {
+      camera.scrollX = Phaser.Math.Clamp(camera.scrollX, 0, this.worldWidth - viewWidth);
+    }
+
+    if (viewHeight >= this.worldHeight) {
+      camera.scrollY = (this.worldHeight - viewHeight) * 0.5;
+    } else {
+      camera.scrollY = Phaser.Math.Clamp(camera.scrollY, 0, this.worldHeight - viewHeight);
+    }
+  }
+
+  getHintText() {
+    const selectedCount = this.selectedAntIds.size;
+    const morphTarget = this.getSelectedMorphTypeId() ?? "-";
+    return [
+      `Tool:${this.currentTool}`,
+      `Build:${this.selectedRoomType}`,
+      `Selected:${selectedCount}`,
+      `Morph:${morphTarget}`,
+      `1-4 Tools`,
+      `[ ] Type`,
+      `T Morph`,
+      `U Upgrade Room`,
+      `Z/V Select Room`,
+      `K Tech`,
+      `S Save`,
+      `L Load`,
+      `O Settings`,
+      `F3 Debug`,
+      `Shift+Drag MultiSelect`,
+      `RMB Drag Pan`,
+      `Wheel Zoom`,
+      `P Pause`,
+      `X Deselect`
+    ].join("  |  ");
   }
 
   registerEngineListeners() {
@@ -147,6 +220,10 @@ export class GameScene extends Phaser.Scene {
       two: Phaser.Input.Keyboard.KeyCodes.TWO,
       three: Phaser.Input.Keyboard.KeyCodes.THREE,
       four: Phaser.Input.Keyboard.KeyCodes.FOUR,
+      t: Phaser.Input.Keyboard.KeyCodes.T,
+      u: Phaser.Input.Keyboard.KeyCodes.U,
+      k: Phaser.Input.Keyboard.KeyCodes.K,
+      c: Phaser.Input.Keyboard.KeyCodes.C,
       q: Phaser.Input.Keyboard.KeyCodes.Q,
       e: Phaser.Input.Keyboard.KeyCodes.E,
       s: Phaser.Input.Keyboard.KeyCodes.S,
@@ -161,8 +238,12 @@ export class GameScene extends Phaser.Scene {
       a: Phaser.Input.Keyboard.KeyCodes.A,
       d: Phaser.Input.Keyboard.KeyCodes.D,
       x: Phaser.Input.Keyboard.KeyCodes.X,
+      z: Phaser.Input.Keyboard.KeyCodes.Z,
+      v: Phaser.Input.Keyboard.KeyCodes.V,
       minus: Phaser.Input.Keyboard.KeyCodes.MINUS,
       equals: Phaser.Input.Keyboard.KeyCodes.EQUALS,
+      leftBracket: Phaser.Input.Keyboard.KeyCodes.OPEN_BRACKET,
+      rightBracket: Phaser.Input.Keyboard.KeyCodes.CLOSED_BRACKET,
       zero: Phaser.Input.Keyboard.KeyCodes.ZERO,
       shift: Phaser.Input.Keyboard.KeyCodes.SHIFT,
       space: Phaser.Input.Keyboard.KeyCodes.SPACE
@@ -185,11 +266,25 @@ export class GameScene extends Phaser.Scene {
         return;
       }
 
+      if (this.currentTool === "select") {
+        const worldPoint = pointer.positionToCamera(this.cameras.main);
+        this.selectionBox.active = true;
+        this.selectionBox.pointerId = pointer.id;
+        this.selectionBox.additive = this.keys.shift.isDown;
+        this.selectionBox.dragged = false;
+        this.selectionBox.start = { x: worldPoint.x, y: worldPoint.y };
+        this.selectionBox.end = { x: worldPoint.x, y: worldPoint.y };
+        return;
+      }
+
       this.handleToolInput(pointer);
     });
 
     this.input.on("pointerup", (pointer) => {
       if (!this.pointerPanning || pointer.id !== this.panPointerId) {
+        if (this.selectionBox.active && pointer.id === this.selectionBox.pointerId) {
+          this.finishSelection(pointer);
+        }
         return;
       }
 
@@ -209,7 +304,25 @@ export class GameScene extends Phaser.Scene {
       const dy = pointer.y - this.lastPointer.y;
       this.cameras.main.scrollX -= dx / this.cameras.main.zoom;
       this.cameras.main.scrollY -= dy / this.cameras.main.zoom;
+      this.clampCameraToBounds();
       this.lastPointer = { x: pointer.x, y: pointer.y };
+
+      return;
+    });
+
+    this.input.on("pointermove", (pointer) => {
+      if (!this.selectionBox.active || pointer.id !== this.selectionBox.pointerId) {
+        return;
+      }
+
+      const worldPoint = pointer.positionToCamera(this.cameras.main);
+      this.selectionBox.end = { x: worldPoint.x, y: worldPoint.y };
+
+      const dx = this.selectionBox.end.x - this.selectionBox.start.x;
+      const dy = this.selectionBox.end.y - this.selectionBox.start.y;
+      if (dx * dx + dy * dy > 20) {
+        this.selectionBox.dragged = true;
+      }
     });
 
     this.input.on("wheel", (pointer, _gameObjects, _dx, dy) => {
@@ -217,8 +330,8 @@ export class GameScene extends Phaser.Scene {
         return;
       }
 
-      const step = this.keys.shift.isDown ? this.zoomStep + 0.1 : this.zoomStep;
-      const zoomFactor = dy < 0 ? step : 1 / step;
+      const sensitivity = this.keys.shift.isDown ? 0.0018 : 0.0012;
+      const zoomFactor = Phaser.Math.Clamp(1 - dy * sensitivity, 0.75, 1.25);
       this.zoomAtScreenPoint(pointer.x, pointer.y, zoomFactor);
     });
   }
@@ -227,7 +340,11 @@ export class GameScene extends Phaser.Scene {
     const cam = this.cameras.main;
     const worldBefore = cam.getWorldPoint(screenX, screenY);
 
-    const nextZoom = Phaser.Math.Clamp(cam.zoom * zoomFactor, this.zoomMin, this.zoomMax);
+    const minZoomByWidth = this.worldWidth > 0 ? cam.width / this.worldWidth : this.zoomMin;
+    const minZoomByHeight = this.worldHeight > 0 ? cam.height / this.worldHeight : this.zoomMin;
+    const effectiveMinZoom = Math.max(this.zoomMin, minZoomByWidth, minZoomByHeight);
+
+    const nextZoom = Phaser.Math.Clamp(cam.zoom * zoomFactor, effectiveMinZoom, this.zoomMax);
     if (Math.abs(nextZoom - cam.zoom) < 0.0001) {
       return;
     }
@@ -236,6 +353,7 @@ export class GameScene extends Phaser.Scene {
     const worldAfter = cam.getWorldPoint(screenX, screenY);
     cam.scrollX += worldBefore.x - worldAfter.x;
     cam.scrollY += worldBefore.y - worldAfter.y;
+    this.clampCameraToBounds();
   }
 
   worldToTile(pointer) {
@@ -261,7 +379,49 @@ export class GameScene extends Phaser.Scene {
     this.selectedRoomType = roomTypes[nextIndex];
   }
 
-  selectAntAt(tileX, tileY) {
+  getSelectedMorphTypeId() {
+    const ants = this.engine.getSystem("ants");
+    const unlocked = ants.getUnlockedTypeIds();
+    if (unlocked.length === 0) {
+      return null;
+    }
+
+    const clampedIndex = Phaser.Math.Wrap(this.selectedMorphTypeIndex, 0, unlocked.length);
+    this.selectedMorphTypeIndex = clampedIndex;
+    return unlocked[clampedIndex];
+  }
+
+  cycleSelectedMorphType(direction) {
+    const ants = this.engine.getSystem("ants");
+    const unlocked = ants.getUnlockedTypeIds();
+    if (unlocked.length === 0) {
+      return;
+    }
+
+    this.selectedMorphTypeIndex = Phaser.Math.Wrap(
+      this.selectedMorphTypeIndex + direction,
+      0,
+      unlocked.length
+    );
+  }
+
+  clearSelection() {
+    this.selectedAntIds.clear();
+    this.selectedRoomId = null;
+  }
+
+  getPrimarySelectedAnt() {
+    const ants = this.engine.getSystem("ants");
+    for (const antId of this.selectedAntIds) {
+      const ant = ants.ants.find((entry) => entry.id === antId && entry.isAlive());
+      if (ant) {
+        return ant;
+      }
+    }
+    return null;
+  }
+
+  selectAntAt(tileX, tileY, additive = false) {
     const ants = this.engine.getSystem("ants");
     const candidates = ants.getAliveAnts();
 
@@ -279,14 +439,204 @@ export class GameScene extends Phaser.Scene {
     }
 
     if (best && bestDist <= 2.2) {
-      this.selectedAntId = best.id;
-    } else {
-      this.selectedAntId = null;
+      if (!additive) {
+        this.selectedAntIds.clear();
+      }
+
+      if (additive && this.selectedAntIds.has(best.id)) {
+        this.selectedAntIds.delete(best.id);
+      } else {
+        this.selectedAntIds.add(best.id);
+      }
+
+      this.selectedRoomId = null;
+
+      const unlocked = ants.getUnlockedTypeIds();
+      const typeIndex = unlocked.indexOf(best.typeId);
+      if (typeIndex >= 0) {
+        this.selectedMorphTypeIndex = typeIndex;
+      }
+
+      return true;
+    }
+
+    if (!additive) {
+      this.selectedAntIds.clear();
+    }
+
+    return false;
+  }
+
+  selectRoomAt(tileX, tileY) {
+    const rooms = this.engine.getSystem("rooms");
+    let room = rooms.rooms.find(
+      (entry) => entry.tilePosition.x === tileX && entry.tilePosition.y === tileY
+    );
+
+    if (!room) {
+      let nearest = null;
+      let nearestDist = Number.POSITIVE_INFINITY;
+      for (const entry of rooms.rooms) {
+        const dx = entry.tilePosition.x - tileX;
+        const dy = entry.tilePosition.y - tileY;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < nearestDist) {
+          nearestDist = dist;
+          nearest = entry;
+        }
+      }
+
+      if (nearest && nearestDist <= 1.35) {
+        room = nearest;
+      }
+    }
+
+    this.selectedRoomId = room?.id ?? null;
+    if (room) {
+      this.selectedAntIds.clear();
+    }
+    return Boolean(room);
+  }
+
+  selectAntsInWorldRect(rect, additive = false) {
+    const ants = this.engine.getSystem("ants");
+    const minX = Math.min(rect.start.x, rect.end.x);
+    const maxX = Math.max(rect.start.x, rect.end.x);
+    const minY = Math.min(rect.start.y, rect.end.y);
+    const maxY = Math.max(rect.start.y, rect.end.y);
+
+    if (!additive) {
+      this.selectedAntIds.clear();
+    }
+
+    for (const ant of ants.getAliveAnts()) {
+      const antWorldX = ant.x * this.engine.getSystem("terrain").tileSize;
+      const antWorldY = ant.y * this.engine.getSystem("terrain").tileSize;
+      if (antWorldX >= minX && antWorldX <= maxX && antWorldY >= minY && antWorldY <= maxY) {
+        this.selectedAntIds.add(ant.id);
+      }
+    }
+
+    if (this.selectedAntIds.size > 0) {
+      this.selectedRoomId = null;
     }
   }
 
+  finishSelection(pointer) {
+    const worldPoint = pointer.positionToCamera(this.cameras.main);
+    this.selectionBox.end = { x: worldPoint.x, y: worldPoint.y };
+
+    if (this.selectionBox.dragged) {
+      this.selectAntsInWorldRect(
+        {
+          start: this.selectionBox.start,
+          end: this.selectionBox.end
+        },
+        this.selectionBox.additive
+      );
+    } else {
+      const tile = this.worldToTile(pointer);
+      if (!this.engine.getSystem("terrain").inBounds(tile.x, tile.y)) {
+        this.selectionBox.active = false;
+        this.selectionBox.pointerId = null;
+        this.selectionBox.dragged = false;
+        return;
+      }
+
+      const selectedAnt = this.selectAntAt(tile.x, tile.y, this.selectionBox.additive);
+      if (!selectedAnt && !this.selectionBox.additive) {
+        this.selectRoomAt(tile.x, tile.y);
+      }
+    }
+
+    this.selectionBox.active = false;
+    this.selectionBox.pointerId = null;
+    this.selectionBox.dragged = false;
+  }
+
+  morphSelectedAnts() {
+    if (this.selectedAntIds.size === 0) {
+      return false;
+    }
+
+    const ants = this.engine.getSystem("ants");
+    const targetTypeId = this.getSelectedMorphTypeId();
+    if (!targetTypeId) {
+      return false;
+    }
+
+    const changed = ants.morphAnts([...this.selectedAntIds], targetTypeId);
+    if (changed > 0) {
+      this.engine.events.emit("ants:morphed", {
+        count: changed,
+        targetTypeId
+      });
+      return true;
+    }
+
+    return false;
+  }
+
+  upgradeSelectedRoom() {
+    if (!this.selectedRoomId) {
+      return false;
+    }
+
+    const upgraded = this.engine.getSystem("rooms").upgradeRoom(this.selectedRoomId);
+    if (upgraded) {
+      this.engine.events.emit("rooms:upgraded", {
+        roomId: this.selectedRoomId
+      });
+    }
+    return upgraded;
+  }
+
+  selectCombatAnts() {
+    const ants = this.engine.getSystem("ants");
+    this.selectedAntIds.clear();
+    for (const ant of ants.getAliveAnts()) {
+      if (String(ant.role).includes("soldier") || ant.state === "Fight") {
+        this.selectedAntIds.add(ant.id);
+      }
+    }
+    this.selectedRoomId = null;
+  }
+
+  selectAllVisibleAnts() {
+    const ants = this.engine.getSystem("ants");
+    const view = this.cameras.main.worldView;
+
+    this.selectedAntIds.clear();
+    for (const ant of ants.getAliveAnts()) {
+      const px = ant.x * this.engine.getSystem("terrain").tileSize;
+      const py = ant.y * this.engine.getSystem("terrain").tileSize;
+      if (view.contains(px, py)) {
+        this.selectedAntIds.add(ant.id);
+      }
+    }
+
+    if (this.selectedAntIds.size > 0) {
+      this.selectedRoomId = null;
+    }
+  }
+
+  cycleSelectedRoom(direction) {
+    const rooms = this.engine.getSystem("rooms").rooms;
+    if (!rooms || rooms.length === 0) {
+      this.selectedRoomId = null;
+      return;
+    }
+
+    const currentIndex = rooms.findIndex((entry) => entry.id === this.selectedRoomId);
+    const baseIndex = currentIndex >= 0 ? currentIndex : 0;
+    const nextIndex = Phaser.Math.Wrap(baseIndex + direction, 0, rooms.length);
+
+    this.selectedRoomId = rooms[nextIndex].id;
+    this.selectedAntIds.clear();
+  }
+
   handleToolInput(pointer) {
-    if (pointer.y < 96) {
+    if (pointer.y >= this.scale.height - this.hintBarHeight) {
       return;
     }
 
@@ -300,7 +650,7 @@ export class GameScene extends Phaser.Scene {
     }
 
     if (this.currentTool === "select") {
-      this.selectAntAt(tile.x, tile.y);
+      this.selectAntAt(tile.x, tile.y, this.keys.shift.isDown);
       return;
     }
 
@@ -403,6 +753,9 @@ export class GameScene extends Phaser.Scene {
     if (Phaser.Input.Keyboard.JustDown(this.keys.o)) {
       this.events.emit("ui:toggleSettings");
     }
+    if (Phaser.Input.Keyboard.JustDown(this.keys.k)) {
+      this.events.emit("ui:toggleTech");
+    }
     if (Phaser.Input.Keyboard.JustDown(this.keys.f3)) {
       this.events.emit("ui:toggleDebug");
     }
@@ -418,7 +771,30 @@ export class GameScene extends Phaser.Scene {
     }
 
     if (Phaser.Input.Keyboard.JustDown(this.keys.x)) {
-      this.selectedAntId = null;
+      this.clearSelection();
+    }
+
+    if (Phaser.Input.Keyboard.JustDown(this.keys.z)) {
+      this.cycleSelectedRoom(-1);
+    }
+    if (Phaser.Input.Keyboard.JustDown(this.keys.v)) {
+      this.cycleSelectedRoom(1);
+    }
+
+    if (Phaser.Input.Keyboard.JustDown(this.keys.leftBracket)) {
+      this.cycleSelectedMorphType(-1);
+    }
+    if (Phaser.Input.Keyboard.JustDown(this.keys.rightBracket)) {
+      this.cycleSelectedMorphType(1);
+    }
+    if (Phaser.Input.Keyboard.JustDown(this.keys.t)) {
+      this.morphSelectedAnts();
+    }
+    if (Phaser.Input.Keyboard.JustDown(this.keys.u)) {
+      this.upgradeSelectedRoom();
+    }
+    if (Phaser.Input.Keyboard.JustDown(this.keys.c)) {
+      this.selectCombatAnts();
     }
 
     if (Phaser.Input.Keyboard.JustDown(this.keys.equals)) {
@@ -440,17 +816,26 @@ export class GameScene extends Phaser.Scene {
 
     const cam = this.cameras.main;
     const speed = (540 * dt) / cam.zoom;
+    let moved = false;
     if (this.keys.w.isDown) {
       cam.scrollY -= speed;
+      moved = true;
     }
     if (this.keys.s.isDown) {
       cam.scrollY += speed;
+      moved = true;
     }
     if (this.keys.a.isDown) {
       cam.scrollX -= speed;
+      moved = true;
     }
     if (this.keys.d.isDown) {
       cam.scrollX += speed;
+      moved = true;
+    }
+
+    if (moved) {
+      this.clampCameraToBounds();
     }
   }
 
@@ -503,12 +888,18 @@ export class GameScene extends Phaser.Scene {
       const x = room.tilePosition.x * tileSize;
       const y = room.tilePosition.y * tileSize;
       const alpha = room.isComplete ? 0.6 : 0.35;
+      const selected = room.id === this.selectedRoomId;
 
       this.entityGraphics.fillStyle(0xc99861, alpha);
       this.entityGraphics.fillRect(x + 1, y + 1, tileSize - 2, tileSize - 2);
 
       this.entityGraphics.lineStyle(1, 0x20160f, 0.7);
       this.entityGraphics.strokeRect(x + 1, y + 1, tileSize - 2, tileSize - 2);
+
+      if (selected) {
+        this.entityGraphics.lineStyle(2, 0xffe394, 0.95);
+        this.entityGraphics.strokeRect(x - 1, y - 1, tileSize + 2, tileSize + 2);
+      }
 
       if (!room.isComplete) {
         this.entityGraphics.fillStyle(0xffe18d, 0.7);
@@ -534,7 +925,7 @@ export class GameScene extends Phaser.Scene {
     for (const ant of ants.getAliveAnts()) {
       const px = ant.x * tileSize;
       const py = ant.y * tileSize;
-      const selected = ant.id === this.selectedAntId;
+      const selected = this.selectedAntIds.has(ant.id);
 
       this.entityGraphics.fillStyle(roleColor(ant.role), 1);
       this.entityGraphics.fillCircle(px, py, selected ? 4.7 : 3.5);
@@ -608,6 +999,18 @@ export class GameScene extends Phaser.Scene {
         this.uiGraphics.fillRect(x * tileSize, y * tileSize, tileSize, tileSize);
       }
     }
+
+    if (this.selectionBox.active && this.selectionBox.dragged) {
+      const minX = Math.min(this.selectionBox.start.x, this.selectionBox.end.x);
+      const maxX = Math.max(this.selectionBox.start.x, this.selectionBox.end.x);
+      const minY = Math.min(this.selectionBox.start.y, this.selectionBox.end.y);
+      const maxY = Math.max(this.selectionBox.start.y, this.selectionBox.end.y);
+
+      this.uiGraphics.fillStyle(0x88b0a0, 0.15);
+      this.uiGraphics.fillRect(minX, minY, maxX - minX, maxY - minY);
+      this.uiGraphics.lineStyle(1, 0xdcefb1, 0.8);
+      this.uiGraphics.strokeRect(minX, minY, maxX - minX, maxY - minY);
+    }
   }
 
   renderWorld() {
@@ -618,23 +1021,6 @@ export class GameScene extends Phaser.Scene {
     this.drawRooms();
     this.drawAntsAndEnemies();
     this.drawDebugOverlays();
-
-    this.controlHint.setText(
-      [
-        `Tool:${this.currentTool}`,
-        `Build:${this.selectedRoomType}`,
-        `1-4 Tools`,
-        `Q/E Room`,
-        `S Save`,
-        `L Load`,
-        `O Settings`,
-        `F3 Debug`,
-        `RMB Drag Pan`,
-        `Wheel Zoom`,
-        `P Pause`,
-        `X Deselect`
-      ].join("  |  ")
-    );
   }
 
   update(_time, delta) {

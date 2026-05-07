@@ -20,8 +20,8 @@ async function bootGame() {
     backgroundColor: "#0e1512",
     roundPixels: true,
     scale: {
-      mode: Phaser.Scale.FIT,
-      autoCenter: Phaser.Scale.CENTER_BOTH
+      mode: Phaser.Scale.RESIZE,
+      autoCenter: Phaser.Scale.NO_CENTER
     },
     fps: {
       target: 60,

@@ -164,8 +164,12 @@ export class DebugPanel {
       `FPS: ${metrics.fps?.toFixed?.(1) ?? 0}`,
       `Ants: ${metrics.ants}  Enemies: ${metrics.enemies}  Rooms: ${metrics.rooms}`,
       `Path Queries: ${metrics.pathfindingQueries}`,
+      `Path AvgVisited: ${(metrics.pathfindingAvgVisited ?? 0).toFixed?.(1) ?? 0}`,
+      `Path Cache H/M: ${metrics.pathfindingCacheHits ?? 0}/${metrics.pathfindingCacheMisses ?? 0}`,
+      `Path Failures: ${metrics.pathfindingFailedQueries ?? 0}`,
       `Pheromone Tiles: ${metrics.pheromoneTiles}`,
       `AI: ${stateEntries || "n/a"}`,
+      `Queues H/I/F: ${metrics.aiQueues?.haul ?? 0}/${metrics.aiQueues?.intercept ?? 0}/${metrics.aiQueues?.frontier ?? 0}`,
       `Rooms: ${roomEntries || "n/a"}`,
       "",
       "Debug overlays can be toggled below."
