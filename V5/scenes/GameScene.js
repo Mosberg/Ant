@@ -1,4 +1,4 @@
-import Phaser from "https://cdn.jsdelivr.net/npm/phaser@3.90.0/dist/phaser.esm.js";
+import * as Phaser from "https://cdn.jsdelivr.net/npm/phaser@3.90.0/dist/phaser.esm.js";
 import { GameEngine } from "../engine/GameEngine.js";
 
 const TOOL_MODES = ["select", "dig", "build", "pheromone"];
@@ -40,7 +40,11 @@ export class GameScene extends Phaser.Scene {
     this.selectedRoomType = "food_storage";
     this.selectedAntId = null;
     this.pointerPanning = false;
+    this.panPointerId = null;
     this.lastPointer = { x: 0, y: 0 };
+    this.zoomMin = 0.38;
+    this.zoomMax = 2.8;
+    this.zoomStep = 1.14;
     this.lossLabel = null;
     this.debugHint = null;
   }
@@ -136,6 +140,8 @@ export class GameScene extends Phaser.Scene {
   }
 
   registerInputHandlers() {
+    this.input.mouse?.disableContextMenu();
+
     this.keys = this.input.keyboard.addKeys({
       one: Phaser.Input.Keyboard.KeyCodes.ONE,
       two: Phaser.Input.Keyboard.KeyCodes.TWO,
@@ -154,28 +160,51 @@ export class GameScene extends Phaser.Scene {
       w: Phaser.Input.Keyboard.KeyCodes.W,
       a: Phaser.Input.Keyboard.KeyCodes.A,
       d: Phaser.Input.Keyboard.KeyCodes.D,
-      x: Phaser.Input.Keyboard.KeyCodes.X
+      x: Phaser.Input.Keyboard.KeyCodes.X,
+      minus: Phaser.Input.Keyboard.KeyCodes.MINUS,
+      equals: Phaser.Input.Keyboard.KeyCodes.EQUALS,
+      zero: Phaser.Input.Keyboard.KeyCodes.ZERO,
+      shift: Phaser.Input.Keyboard.KeyCodes.SHIFT,
+      space: Phaser.Input.Keyboard.KeyCodes.SPACE
     });
 
     this.input.on("pointerdown", (pointer) => {
-      if (pointer.middleButtonDown()) {
+      const wantsPan =
+        pointer.rightButtonDown() ||
+        pointer.middleButtonDown() ||
+        (pointer.leftButtonDown() && this.keys.space.isDown);
+
+      if (wantsPan) {
         this.pointerPanning = true;
+        this.panPointerId = pointer.id;
         this.lastPointer = { x: pointer.x, y: pointer.y };
         return;
       }
+
+      if (!pointer.leftButtonDown()) {
+        return;
+      }
+
       this.handleToolInput(pointer);
     });
 
     this.input.on("pointerup", (pointer) => {
-      if (pointer.middleButtonReleased()) {
-        this.pointerPanning = false;
+      if (!this.pointerPanning || pointer.id !== this.panPointerId) {
+        return;
       }
+
+      this.pointerPanning = false;
+      this.panPointerId = null;
     });
 
     this.input.on("pointermove", (pointer) => {
-      if (!this.pointerPanning) {
+      if (
+        !this.pointerPanning ||
+        (this.panPointerId !== null && pointer.id !== this.panPointerId)
+      ) {
         return;
       }
+
       const dx = pointer.x - this.lastPointer.x;
       const dy = pointer.y - this.lastPointer.y;
       this.cameras.main.scrollX -= dx / this.cameras.main.zoom;
@@ -183,9 +212,30 @@ export class GameScene extends Phaser.Scene {
       this.lastPointer = { x: pointer.x, y: pointer.y };
     });
 
-    this.input.on("wheel", (_pointer, _gameObjects, _dx, dy) => {
-      this.cameras.main.zoom = Phaser.Math.Clamp(this.cameras.main.zoom - dy * 0.0015, 0.45, 2.2);
+    this.input.on("wheel", (pointer, _gameObjects, _dx, dy) => {
+      if (!pointer) {
+        return;
+      }
+
+      const step = this.keys.shift.isDown ? this.zoomStep + 0.1 : this.zoomStep;
+      const zoomFactor = dy < 0 ? step : 1 / step;
+      this.zoomAtScreenPoint(pointer.x, pointer.y, zoomFactor);
     });
+  }
+
+  zoomAtScreenPoint(screenX, screenY, zoomFactor) {
+    const cam = this.cameras.main;
+    const worldBefore = cam.getWorldPoint(screenX, screenY);
+
+    const nextZoom = Phaser.Math.Clamp(cam.zoom * zoomFactor, this.zoomMin, this.zoomMax);
+    if (Math.abs(nextZoom - cam.zoom) < 0.0001) {
+      return;
+    }
+
+    cam.setZoom(nextZoom);
+    const worldAfter = cam.getWorldPoint(screenX, screenY);
+    cam.scrollX += worldBefore.x - worldAfter.x;
+    cam.scrollY += worldBefore.y - worldAfter.y;
   }
 
   worldToTile(pointer) {
@@ -369,6 +419,16 @@ export class GameScene extends Phaser.Scene {
 
     if (Phaser.Input.Keyboard.JustDown(this.keys.x)) {
       this.selectedAntId = null;
+    }
+
+    if (Phaser.Input.Keyboard.JustDown(this.keys.equals)) {
+      this.zoomAtScreenPoint(this.scale.width * 0.5, this.scale.height * 0.5, this.zoomStep);
+    }
+    if (Phaser.Input.Keyboard.JustDown(this.keys.minus)) {
+      this.zoomAtScreenPoint(this.scale.width * 0.5, this.scale.height * 0.5, 1 / this.zoomStep);
+    }
+    if (Phaser.Input.Keyboard.JustDown(this.keys.zero)) {
+      this.cameras.main.setZoom(1);
     }
   }
 
@@ -569,6 +629,8 @@ export class GameScene extends Phaser.Scene {
         `L Load`,
         `O Settings`,
         `F3 Debug`,
+        `RMB Drag Pan`,
+        `Wheel Zoom`,
         `P Pause`,
         `X Deselect`
       ].join("  |  ")
